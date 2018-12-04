@@ -17,10 +17,10 @@ class User(db.Model):
 	lastname = db.Column(db.String(24), index=True, unique=True)
 	email = db.Column(db.String(50), index=True, unique=True)
 	password = db.Column(db.String(128))
-	phonenumber = db.Colunm(db.String(18), index=True, unique=True)
+	phonenumber = db.Column(db.String(18), index=True, unique=True)
 	address1 = db.Column(db.String(200), index=True, unique=True)
 	address2 = db.Column(db.String(200), index=True, unique=True)
-	postcode = db.Column(db.Integer(12), index=True)
+	postcode = db.Column(db.String(12), index=True)
 	city = db.Column(db.String(24), index=True)
 	state = db.Column(db.String(24), index=True)
 	country = db.Column(db.String(24), index=True)
@@ -47,17 +47,30 @@ class Categories(db.Model):
 
 
 class Products(db.Model):
+	__tablename__ = 'product'
 	id = db.Column(db.Integer, primary_key=True)
 	product_name = db.Column(db.String(100), index=True, unique=True)
 	product_price = db.Column(db.Numeric(7), index=True)
 	product_image = db.Column(db.String(120),index=True, unique=True)
-	product_stock = db.Column(Integer(3), index = True)
+	product_stock = db.Column(db.String(3), index = True)
 	#foreign key to categories
 	categories_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
 	#foreign key to kart
 	kart_id = db.Column(db.Integer, db.ForeignKey('kart.id'))
 	
-	#many many rel with order
+
+	'''
+
+		foreign key for product.id
+		test this weda its one order several products or several orders, serveral products
+		using many to many for now	
+
+		
+
+		#many many rel with order
+
+	'''
+	
 	order = db.relationship("Order", secondary = association_table)
 
 	def __repr__(self):
@@ -74,14 +87,16 @@ class Kart(db.Model):
 
 	#foreign key for userid
 	#indicating a one to one rel with user
-	user_id = db.Column(db.Integer, ForeignKey('user.id'))
+	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 	user = db.relationship('User', uselist=False, backref='user')
 
 
 
 
 class Order(db.Model):
+	__tablename__ = 'order'
 	id = db.Column(db.Integer, primary_key=True)
+	quantity = db.Column(db.Integer, index = True)
 	timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 	
 	'''
@@ -89,8 +104,13 @@ class Order(db.Model):
 		foreign key for product.id
 		test this weda its one order several products or several orders, serveral products
 		using many to many for now	
+
+		products_order = db.relationship("Order", backref="products")
+		
+
 	'''
-	products_order = db.relationship("Order", primary_key=True)
+	
+	
 
 
 	#foreign key for userid
