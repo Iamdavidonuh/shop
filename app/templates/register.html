@@ -1,0 +1,49 @@
+{% extends 'header.html' %}
+
+{% block body %}
+
+
+<p>
+	admin registration
+</p>
+<form method="post">
+
+
+	{{ form.hidden_tag() }}
+<p>
+	{{ form.firstname.label}}
+	{{ form.firstname }}
+	
+</p>
+
+<p>
+	{{ form.lastname.label}}
+	{{ form.lastname }}
+</p>
+
+<p>
+	{{ form.email.label}}
+	{{ form.email }}
+</p>
+<p>
+	{{ form.phonenumber.label}}
+	{{ form.phonenumber }}
+</p>
+<p>
+	{{ form.password.label}}
+	{{ form.password }}
+</p>
+<p>
+	{{ form.confirm.label}}
+	{{ form.confirm }}
+</p>
+<p>
+	{{ form.submit() }}
+</p>
+
+
+
+</form>
+
+<p> {{ error }} </p>
+{% endblock %}

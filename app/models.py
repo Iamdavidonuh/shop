@@ -1,6 +1,8 @@
+from app import db,login
 from datetime import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
 
-from app import db
 
 association_table = db.Table('association', db.Model.metadata,
 	db.Column('product',db.Integer, db.ForeignKey('product.id')),
@@ -11,12 +13,39 @@ association_table = db.Table('association', db.Model.metadata,
 	models holds database tables
 '''
 
-class User(db.Model):
+class Admin(UserMixin, db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	firstname = db.Column(db.String(24), index=True, unique=True)
 	lastname = db.Column(db.String(24), index=True, unique=True)
 	email = db.Column(db.String(50), index=True, unique=True)
-	password = db.Column(db.String(128))
+	password_hash = db.Column(db.String(128))
+	phonenumber = db.Column(db.String(18), index=True, unique=True)
+
+	def __repr__(self):
+		return '<Admin {}'.format(self.firstname)
+
+
+	def set_password(self, password):
+		self.password = generate_password_hash(password)
+
+	def check_password(self, password):
+		return check_password_hash(self.password_hash, password)
+
+@login.user_loader
+def load_user(id):
+    return Admin.query.get(int(id))
+
+
+
+
+
+
+class User(UserMixin, db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	firstname = db.Column(db.String(24), index=True, unique=True)
+	lastname = db.Column(db.String(24), index=True, unique=True)
+	email = db.Column(db.String(50), index=True, unique=True)
+	password_hash = db.Column(db.String(128))
 	phonenumber = db.Column(db.String(18), index=True, unique=True)
 	address1 = db.Column(db.String(200), index=True, unique=True)
 	address2 = db.Column(db.String(200), index=True, unique=True)
@@ -32,6 +61,16 @@ class User(db.Model):
 	def __repr__(self):
 		return '<User {}'.format(self.email)
 
+
+	def set_password(self, password):
+		self.password = generate_password_hash(password)
+
+	def check_password(self, password):
+		return check_password_hash(self.password_hash, password)
+
+@login.user_loader
+def load_user(id):
+    return User.query.get(int(id))
 
 
 
@@ -52,7 +91,8 @@ class Products(db.Model):
 	product_name = db.Column(db.String(100), index=True, unique=True)
 	product_price = db.Column(db.Numeric(7), index=True)
 	product_image = db.Column(db.String(120),index=True, unique=True)
-	product_stock = db.Column(db.String(3), index = True)
+	product_description = db.Column(db.String(200), index=True)
+	product_stock = db.Column(db.Integer, index = True)
 	#foreign key to categories
 	categories_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
 	#foreign key to kart
@@ -98,7 +138,6 @@ class Order(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	quantity = db.Column(db.Integer, index = True)
 	timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-	
 	'''
 
 		foreign key for product.id
@@ -109,10 +148,6 @@ class Order(db.Model):
 		
 
 	'''
-	
-	
-
-
 	#foreign key for userid
 	#
 	#user and order relationship is a one to many(foreign key

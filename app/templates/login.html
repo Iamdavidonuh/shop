@@ -1,0 +1,42 @@
+{% extends 'header.html' %}
+
+{% block body %}
+
+
+<p>
+	Admin login
+</p>
+
+<form method="post">
+	{{ form.hidden_tag() }}
+	
+
+<p>
+	{{ form.email.label }}
+	{{ form.email }}
+</p>
+
+<p>
+	{{ form.password.label }}
+	{{ form.password }}
+</p>
+	{{ form.submit() }}
+
+</form>
+
+{{ error }}
+
+
+<div>
+	
+<div>
+	
+		{% for field, errors in form.errors.items() %}
+			<p class="error"><strong>Error: </strong> {{ form[field].label }}: {{ ', '.join(errors) }}</p>
+
+
+		{% endfor %}
+</div>
+</div>
+
+{% endblock %}

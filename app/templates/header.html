@@ -10,7 +10,10 @@
 			<a href="#">Home</a>
 		</li>
 		<li>
-			<a href="#">Profile</a>
+			<a href="{{ url_for('admin_register') }}">Register</a>
+		</li>
+		<li>
+			<a href="{{ url_for('admin_login') }}">Login</a>
 		</li>
 		<li>
 			<a href="#">Cart</a>
@@ -18,15 +21,29 @@
 	</ul>
 </header>
 
+	<div>
+		{% with messages = get_flashed_messages() %}
+		  {% if messages %}
+		    {% for message in messages %}
+			<p style="background-color: pink; color: green;" > {{ message }} </p>
+		{% endfor %}
+
+
+		{% endif %}
+		{% endwith %}
+	</div>
+
+
 {% block body %}
 
 
 {% endblock %}
 
-
-<footer style="background-color: #ff23f3;>
-	this is the fucker footer
-</footer>
 </body>
+<footer style="background-color: red;">
+	this is the footer oga
+</footer>
+
 </html>
+
 
