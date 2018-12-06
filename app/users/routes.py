@@ -11,3 +11,6 @@ from flask_login import (current_user, login_user, logout_user, login_required
 
 users = Blueprint('users', __name__)
 
+@users.route('/test')
+def test():
+	return render_template('test.html')

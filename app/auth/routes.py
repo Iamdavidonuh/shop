@@ -14,7 +14,6 @@ auth = Blueprint('auth', __name__)
 
 
 
-
 @auth.route('/logout/')
 @login_required
 def logout():
@@ -30,7 +29,7 @@ def register():
 		error = ' '
 		if form.validate_on_submit():
 			user = User(firstname = form.firstname.data, lastname = form.lastname.data,
-				phonenumber=form.phonenumber.data)
+				phonenumber=form.phonenumber.data,email = form.email.data,)
 			user.set_password(form.password.data)
 			db.session.add(user)
 			db.session.commit()
@@ -57,9 +56,14 @@ def login():
 				flash("invalid username or password")
 				return redirect(url_for('auth.login', form = form))
 			login_user(user)
+
+			#check if user is an admin or not and login to the appropriate place
+			if user.is_admin:
+				return redirect(url_for('admin.admin_dashboard'))
+			else:
+				return redirect(url_for('home.homepage'))
 			gc.collect()
 			flash("you have been successfully logged in")
-			return redirect(url_for('home.homepage'))
 		return render_template('login.html', form = form)
 	except Exception as e:
 		return render_template('login.html', form= form, error= error)

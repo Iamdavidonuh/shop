@@ -15,23 +15,23 @@ association_table = db.Table('association', db.Model.metadata,
 
 
 class User(UserMixin, db.Model):
+
+	__tablename__="user"
+
 	id = db.Column(db.Integer, primary_key=True)
 	firstname = db.Column(db.String(24), index=True, unique=True)
 	lastname = db.Column(db.String(24), index=True, unique=True)
 	email = db.Column(db.String(50), index=True, unique=True)
 	password_hash = db.Column(db.String(128))
 	phonenumber = db.Column(db.String(18), index=True, unique=True)
-	address1 = db.Column(db.String(200), index=True, unique=True)
-	address2 = db.Column(db.String(200), index=True, unique=True)
-	postcode = db.Column(db.String(12), index=True)
-	city = db.Column(db.String(24), index=True)
-	state = db.Column(db.String(24), index=True)
-	country = db.Column(db.String(24), index=True)
 	is_admin = db.Column(db.Boolean, default = False)
 	#user and order relationship is a one to many 
 	order = db.relationship('Order', backref='my_orders')
 	#user and kart is one to one relationship
 	kart = db.relationship('Kart', uselist=False, backref='user_kart')
+	#one to many relationships with Shipping info
+	shipping_info = db.relationship('ShippingInfo', backref='role',
+                                lazy='dynamic')
 
 	def __repr__(self):
 		return '<User {}'.format(self.email)
@@ -46,6 +46,24 @@ class User(UserMixin, db.Model):
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
+
+
+class ShippingInfo(db.Model):
+	__tablename__ = "shipping info"
+	id = db.Column(db.Integer, primary_key=True)
+	address1 = db.Column(db.String(200), index=True, unique=True)
+	address2 = db.Column(db.String(200), index=True, unique=True)
+	postcode = db.Column(db.String(12), index=True)
+	city = db.Column(db.String(24), index=True)
+	state = db.Column(db.String(24), index=True)
+	country = db.Column(db.String(24), index=True)
+	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+
+	def __repr__(self):
+		return '<ShippingInfo {}'.format(self.address1)
+
 
 
 
@@ -72,6 +90,7 @@ class Products(db.Model):
 	categories_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
 	#foreign key to kart
 	kart_id = db.Column(db.Integer, db.ForeignKey('kart.id'))
+
 	
 
 	'''

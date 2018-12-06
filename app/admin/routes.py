@@ -4,8 +4,8 @@ admin = Blueprint('admin', __name__)
 
 
 
-@admin.route('/admin/')
+@admin.route('/dashboard/')
 def admin_dashboard():
 	flash("admin dashboard")
-	return render_template('admin_dashboard.html')
+	return render_template('admin/admin_dashboard.html')
 
