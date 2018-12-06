@@ -4,10 +4,13 @@ from wtforms import StringField, PasswordField, SubmitField, validators
 
 from wtforms.validators import ValidationError, DataRequired
 
-from app.models import Admin
+from app.models import User
+
+
+
 
 #admin register form
-class AdminRegForm(FlaskForm):
+class RegistrationForm(FlaskForm):
 
 	firstname = StringField('First Name', [validators.Length(min=4,max=20)])
 	lastname = StringField('Last Name', [validators.Length(min=4,max=20)])
@@ -28,14 +31,12 @@ class AdminRegForm(FlaskForm):
 
 
 	def validate_email(self, email):
-		admin = Admin.query.filter_by(email=email.data).first()
-		if admin is not None:
-			raise ValidationError("Please use a different email address. ")
+		user = User.query.filter_by(email=email.data).first()
+		if user is not None:
+			raise ValidationError("Email already in use. ")
 
 #general login form
 class LoginForm(FlaskForm):
 	email = StringField('Email Address', [validators.DataRequired()])
 	password = PasswordField('Password', [validators.DataRequired()])
 	submit = SubmitField('Sign In')
-
-

@@ -13,32 +13,6 @@ association_table = db.Table('association', db.Model.metadata,
 	models holds database tables
 '''
 
-class Admin(UserMixin, db.Model):
-	id = db.Column(db.Integer, primary_key=True)
-	firstname = db.Column(db.String(24), index=True, unique=True)
-	lastname = db.Column(db.String(24), index=True, unique=True)
-	email = db.Column(db.String(50), index=True, unique=True)
-	password_hash = db.Column(db.String(128))
-	phonenumber = db.Column(db.String(18), index=True, unique=True)
-
-	def __repr__(self):
-		return '<Admin {}'.format(self.firstname)
-
-
-	def set_password(self, password):
-		self.password = generate_password_hash(password)
-
-	def check_password(self, password):
-		return check_password_hash(self.password_hash, password)
-
-@login.user_loader
-def load_user(id):
-    return Admin.query.get(int(id))
-
-
-
-
-
 
 class User(UserMixin, db.Model):
 	id = db.Column(db.Integer, primary_key=True)
@@ -53,6 +27,7 @@ class User(UserMixin, db.Model):
 	city = db.Column(db.String(24), index=True)
 	state = db.Column(db.String(24), index=True)
 	country = db.Column(db.String(24), index=True)
+	is_admin = db.Column(db.Boolean, default = False)
 	#user and order relationship is a one to many 
 	order = db.relationship('Order', backref='my_orders')
 	#user and kart is one to one relationship
