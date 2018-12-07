@@ -1,63 +1,27 @@
+{% import "bootstrap/utils.html" as utils %}
+{% import "bootstrap/wtf.html" as wtf %}
 {% extends "header.html" %}
 
-{% block body %} 
+{%block body%}
 
-<div class="container" style="max-width: 750px;margin-left: auto; margin-right: auto;">
-
-
-	<form method="post" action="" novalidate>
-              {{ form.hidden_tag() }}
-
-          <div class="form-group">
-            {{ form.firstname.label }}
-            {{ form.firstname }}
-          </div>
-
-          <div class="form-group">
-            {{ form.lastname.label }}
-            {{ form.lastname }}
-          </div>
-
-          <div class="form-group">
-            {{ form.email.label }}
-            {{ form.email }}
-          </div>
-
-          <div class="form-group">
-            {{ form.phonenumber.label }}
-            {{ form.phonenumber}}
-          </div>
+<div class="center">
+    <h1>Register for an account</h1>
+    <br/>
 
 
+    {{ wtf.quick_form(form) }}
+  </div>
 
-          <div class="form-group">
-            {{ form.password.label }}
-            {{ form.password }}
-          </div>
-
-          <div class="form-group">
-            {{ form.confirm.label }}
-            {{ form.confirm}}
-          </div>
-
-          {{ form.submit() }}
-
-
-  </form>    
-
-  <p>
-    
-
-<div>
   
-    {% for field, errors in form.errors.items() %}
-      <p class="error"><strong>Error: </strong> {{ form[field].label }}: {{ ', '.join(errors) }}</p>
+
+  
 
 
-    {% endfor %}
-</div>
-  </p>
 
-</div>
+
 {% endblock %}
+
+
+
+
 

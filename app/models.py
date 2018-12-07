@@ -1,4 +1,4 @@
-from app import db,login
+from app import db, login
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
@@ -22,7 +22,7 @@ class User(UserMixin, db.Model):
 	firstname = db.Column(db.String(24), index=True)
 	lastname = db.Column(db.String(24), index=True)
 	email = db.Column(db.String(50), index=True, unique=True)
-	password_hash = db.Column(db.String(128))
+	password_hash = db.Column(db.String)
 	phonenumber = db.Column(db.String(18), index=True, unique=True)
 	is_admin = db.Column(db.Boolean, default = False)
 	#user and order relationship is a one to many 
@@ -30,28 +30,16 @@ class User(UserMixin, db.Model):
 	#user and kart is one to one relationship
 	kart = db.relationship('Kart', uselist=False, backref='user_kart')
 	#one to many relationships with Shipping info
-	shipping_info = db.relationship('ShippingInfo', backref='role',
-                                lazy='dynamic')
-
-	'''
-	@property
-    def password(self):
-
-        """
-        Prevent pasword from being accessed
-        """
-        raise AttributeError('password is not a readable attribute.')
-
-    '''    
-    #@password.setter
+	shipping_info = db.relationship('ShippingInfo', backref='role',lazy='dynamic')
+	
 	def set_password(self, password):
-		self.password = generate_password_hash(password)
-
+		self.password_hash = generate_password_hash(password)
+	
 	def check_password(self, password):
 		return check_password_hash(self.password_hash, password)
 
 	def __repr__(self):
-		return '<User {}'.format(self.email)
+		return '<User {}>'.format(self.email)
 
 
 
@@ -78,7 +66,7 @@ class ShippingInfo(db.Model):
 
 
 	def __repr__(self):
-		return '<ShippingInfo {}'.format(self.address1)
+		return '<ShippingInfo {}>'.format(self.address1)
 
 
 
@@ -90,7 +78,7 @@ class Categories(db.Model):
 	product = db.relationship('Products', backref='products_categories')
 
 	def __repr__(self):
-		return '<Categories {}'.format(self.category_name)
+		return '<Categories {}>'.format(self.category_name)
 	
 
 
@@ -124,7 +112,7 @@ class Products(db.Model):
 	order = db.relationship("Order", secondary = association_table)
 
 	def __repr__(self):
-		return '<Products {}'.format(self.product_name)
+		return '<Products {}>'.format(self.product_name)
 
 
 
@@ -165,4 +153,4 @@ class Order(db.Model):
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 	def __repr__(self):
-		return '<Order {}'.format(self.timestamp)
+		return '<Order {}>'.format(self.timestamp)

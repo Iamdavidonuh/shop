@@ -55,21 +55,21 @@ def login():
 			flash("you are already logged in")
 			return redirect(url_for('home.homepage'))
 		if form.validate_on_submit():
+			
 			user = User.query.filter_by(email=form.email.data).first()
-
-			if user is not None and user.check_password(form.password.data):
-				
-				login_user(user)
-				flash("you have been successfully logged in")
-				gc.collect()
-				#check if user is an admin or not and login to the appropriate place
-				if user.is_admin:
-					return redirect(url_for('home.admin_dashboard'))
-				else:
-					return redirect(url_for('home.homepage'))
-			else:
-				flash("invalid username or password")
+			if user is None or not user.check_password(form.password.data):
+				flash('Invalid username or password')
 				return redirect(url_for('auth.login', form = form, title = "Login to your account"))
+			login_user(user)
+			flash("you have been successfully logged in")
+			gc.collect()
+			
+			#check if user is an admin or not and login to the appropriate place
+			if user.is_admin:
+				return redirect(url_for('home.admin_dashboard'))
+			else:
+				return redirect(url_for('home.homepage'))
+			
 		return render_template('login.html', form = form, title = "Login to your account")
 	except Exception as e:
 		flash(e)
