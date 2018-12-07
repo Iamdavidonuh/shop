@@ -13,8 +13,8 @@ db = SQLAlchemy(app)
 #db.create_all
 migrate = Migrate(app, db)
 
-login = LoginManager(app)
-login.login_view = 'auth.login'
+login_manager = LoginManager(app)
+login_manager.login_view = 'auth.login'
 
 Bootstrap(app)
 
