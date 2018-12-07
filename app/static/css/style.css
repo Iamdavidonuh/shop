@@ -26,8 +26,10 @@ p.copyright {
 }
 
 .alert-info {
-    width: 50%;
-    margin: auto;
+    
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
     color: #687430;
     background-color: #e6ecca;
     border-color: #aec251;
