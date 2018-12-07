@@ -19,8 +19,8 @@ class User(UserMixin, db.Model):
 	__tablename__="user"
 
 	id = db.Column(db.Integer, primary_key=True)
-	firstname = db.Column(db.String(24), index=True, unique=True)
-	lastname = db.Column(db.String(24), index=True, unique=True)
+	firstname = db.Column(db.String(24), index=True)
+	lastname = db.Column(db.String(24), index=True)
 	email = db.Column(db.String(50), index=True, unique=True)
 	password_hash = db.Column(db.String(128))
 	phonenumber = db.Column(db.String(18), index=True, unique=True)
@@ -68,8 +68,8 @@ def load_user(id):
 class ShippingInfo(db.Model):
 	__tablename__ = "shipping info"
 	id = db.Column(db.Integer, primary_key=True)
-	address1 = db.Column(db.String(200), index=True, unique=True)
-	address2 = db.Column(db.String(200), index=True, unique=True)
+	address1 = db.Column(db.String(200), index=True)
+	address2 = db.Column(db.String(200), index=True)
 	postcode = db.Column(db.String(12), index=True)
 	city = db.Column(db.String(24), index=True)
 	state = db.Column(db.String(24), index=True)
@@ -85,7 +85,7 @@ class ShippingInfo(db.Model):
 
 class Categories(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	category_name  = db.Column(db.String(20), index = True, unique=True) 
+	category_name  = db.Column(db.String(20), index = True) 
 	#one to many relationship btwn categories and products
 	product = db.relationship('Products', backref='products_categories')
 
@@ -97,7 +97,7 @@ class Categories(db.Model):
 class Products(db.Model):
 	__tablename__ = 'product'
 	id = db.Column(db.Integer, primary_key=True)
-	product_name = db.Column(db.String(100), index=True, unique=True)
+	product_name = db.Column(db.String(100), index=True)
 	product_price = db.Column(db.Numeric(7), index=True)
 	product_image = db.Column(db.String(120),index=True, unique=True)
 	product_description = db.Column(db.String(200), index=True)
