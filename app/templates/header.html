@@ -32,7 +32,7 @@
                   {% if current_user.is_admin %}
                     <li><a href="{{ url_for('home.admin_dashboard') }}">Dashboard</a></li>
                     <li><a href="{{ url_for('admin.list_categories') }}">Categories</a></li>
-                    <li><a href="#">Products</a></li>
+                    <li><a href="{{ url_for('admin.list_products') }}">Products</a></li>
                     <li><a href="#">Orders</a></li>
                   {% else %}
                     <li><a href="{{ url_for('home.dashboard') }}">Dashboard</a></li>

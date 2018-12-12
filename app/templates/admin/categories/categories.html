@@ -13,6 +13,8 @@
         {% if categories %}
           <hr class="intro-divider">
           <div class="center">
+            <!-- will change whole set up for table look up(remove widths from tables
+              and rearrange)-->
             <table class="table table-striped table-bordered">
               <thead>
                 <tr>
@@ -28,13 +30,12 @@
                 <tr>
                   <td> {{ category.category_name }} </td>
                   <!-- add a category description if needed -->
+                  {% for name in category.product %}
                   <td>
-                    {% if category.products %}
-                      {{ category.products.count() }}
-                    {% else %}
-                      0
-                    {% endif %}
+                   
+                    {{ name}}
                   </td>
+                  {%endfor%}
                   <td>
                     <a href="{{ url_for('admin.edit_category', id=category.id) }}">
                       <i class="fa fa-pencil"></i> Edit 
