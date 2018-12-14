@@ -127,3 +127,11 @@ p.copyright {
     margin-right: auto;
 }
 
+.cards {
+
+    max-width: 360px;
+    border: 1px solid lightblue;
+    border-radius: 2px;
+    margin-left: auto;
+    margin-right: auto;
+}
