@@ -1,0 +1,22 @@
+{% extends "header.html" %}
+
+{% block body %}
+
+{% if category %}
+{% for product_list in category.product %}
+<a href="{{ url_for('home.product_details', id = product.id ) }}">
+<div class="cards">
+  {{ product_list.product_name }}
+  {{ product_list.product_price }} 
+  add product image 
+ <!-- {{ product_list.product_image }} -->
+</div>
+</a>
+<div class="cards">
+<p>
+    add product image and fix it templates well
+</p>
+</div>
+{% endfor %}
+{% endif %}
+{% endblock %}

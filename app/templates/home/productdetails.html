@@ -1,0 +1,29 @@
+{% extends "header.html" %}
+
+{% block body %}
+{% if product_detail %}
+
+<p>
+    this is the details of {{ product_detail.product_name }}
+</p>
+
+<div>
+    {{ product_detail.product_image }}
+
+    <p>
+       {{ product_detail.product_stock }}
+    </p>
+    <b>
+        {{product_detail.product_description }}
+    </b>
+    <p>
+        show sizes and color side by side
+    </p>
+    <!-- change button and render form from forms.py -->
+<a href="{{ url_for('home.add_to_cart', id = product_detail.id ) }}">
+    <input type="button" class="btn btn-primary" value="Add to cart">
+</a>
+</div>
+
+{% endif %}
+{% endblock %}

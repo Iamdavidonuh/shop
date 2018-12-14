@@ -1,0 +1,36 @@
+{% extends "header.html" %}
+
+{% block body %}
+
+<body>
+	<p>
+		shop by categories and  each category will include below
+	</p>
+	<p>
+		different products goes in here
+		showing image, product name, price, stock(optional),
+	</p>
+	{% if products %}
+	{% if categories %}
+
+	{% for category in categories %}
+	<div class="thumbnail">
+		{% for productname in category.product %}
+		<div class="cards">
+			<a href="{{ url_for('home.shop_by_category', id=category.id) }}">
+			<div class="img">
+				<img src="{{ productname.product_image }}" alt="{{productname.product_name}}">
+
+			</div>
+			{{ category.category_name }}
+		</a>
+		</div>
+		
+	</div>
+	{%endfor%}
+	{% endfor %}
+	{% endif %}
+	{% endif %}
+</body>
+
+{% endblock %}
