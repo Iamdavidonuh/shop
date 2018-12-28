@@ -1,36 +1,39 @@
-{% extends "header.html" %}
+{% extends "base.html" %}
 
 {% block body %}
 
 <body>
-	<p>
-		shop by categories and  each category will include below
-	</p>
-	<p>
-		different products goes in here
-		showing image, product name, price, stock(optional),
-	</p>
-	{% if products %}
+
+	<div class="container-fluid">
 	{% if categories %}
 
-	{% for category in categories %}
-	<div class="thumbnail">
-		{% for productname in category.product %}
-		<div class="cards">
-			<a href="{{ url_for('home.shop_by_category', id=category.id) }}">
-			<div class="img">
-				<img src="{{ productname.product_image }}" alt="{{productname.product_name}}">
-
-			</div>
-			{{ category.category_name }}
-		</a>
+	<div class="row">
+		{% for category in categories %}
+	<a href="{{ url_for('home.shop_by_category', id=category.id) }}">
+		<div class="col l4 s12 m6" style="width: 33.33333%" >
+			<div class="card-panel hoverable" style="height:270px; background-color:#FFFFFF;">
+					<div class="card-image" style="margin-left:auto;margin-right: auto;">
+							<img class="responsive-img" src="{{url_for('static', filename = 'test.png')}}"  >
+							<div class="caption">
+							<br>
+							<span class="card-title">
+								<strong style="font-size:16px;font-family: 'Roboto', sans-serif;color: #000;">
+									{{ category.category_name }}
+								</strong>
+							</span>
+							</div>
+					
+						</div>
+				</div>
 		</div>
-		
+	</a>
+		{% endfor %}
 	</div>
-	{%endfor%}
-	{% endfor %}
+
+
+
 	{% endif %}
-	{% endif %}
+	</div>
 </body>
 
 {% endblock %}

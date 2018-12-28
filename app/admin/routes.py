@@ -134,11 +134,10 @@ def add_product():
 	if form.validate_on_submit():
 		filename = request.files['image']
 		_, f_ext = os.path.splitext(filename.filename)
-		
 		name = form.name.data
 		picture_fn = name + f_ext
 		photos.save(filename, name = picture_fn)
-		url = photos.url(filename)
+		url = photos.url(picture_fn)
 		product = Products(product_name = form.name.data,
 		product_price = form.price.data,product_image = url,
 		product_description = form.description.data, product_stock = form.stock.data )
@@ -184,7 +183,7 @@ def edit_product(id):
 		previous_name = product.product_image
 
 		photos.save(filename, name = picture_fn)
-		url = photos.url(filename)
+		url = photos.url(picture_fn)
 
 
 		product.product_name = form.name.data
@@ -225,11 +224,10 @@ def delete_product(id):
 	db.session.delete(product)
 	db.session.commit()
 	flash("You have successfully deleted a product")
-	
 	#redirect to products page
-	redirect(url_for('admin.list_products'))
+	return redirect(url_for('admin.list_products'))
 	#renders same template as edit_product
-	return render_template('admin/products/products.html',title = "Delete Product")
+	#return render_template(title = "Delete Product")
 
 	
 	

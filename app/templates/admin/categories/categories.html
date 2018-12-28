@@ -20,7 +20,7 @@
                 <tr>
                   <th width="45%"> Name </th>
                   <!-- <th width="40%"> Description </th> -->
-                  <th width="15%"> Product Count </th>
+                  <th width="15%"> Products</th>
                   <th width="15%"> Edit </th>
                   <th width="15%"> Delete </th>
                 </tr>
@@ -30,12 +30,23 @@
                 <tr>
                   <td> {{ category.category_name }} </td>
                   <!-- add a category description if needed -->
-                  {% for name in category.product %}
+                    {% if category.product == [] %}
+                    <td>
+                      0
+                    </td>
+                    {% else %}
                   <td>
-                   
-                    {{ name }}
-                  </td>
-                  {%endfor%}
+                      <ol>
+                        {% for name in category.product %}
+                          <li>
+                            {{ name.product_name }}
+                          </li>
+                          {% endfor %}
+                        </ol>  
+                  </td> 
+                  {% endif %}
+                  
+                  
                   <td>
                     <a href="{{ url_for('admin.edit_category', id=category.id) }}">
                       <i class="fa fa-pencil"></i> Edit 

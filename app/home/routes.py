@@ -6,8 +6,15 @@ from flask import ( render_template, request, redirect, url_for, session,
 from flask_login import current_user, login_required
 
 from app.models import Categories, Products
+from app.home.forms import ProductVariations
 
 home = Blueprint('home', __name__)
+
+@home.route('/test')
+def test():	
+	return render_template("base.html", title = 'test')
+
+
 
 @home.route('/admin/dashboard/')
 @login_required
@@ -39,10 +46,11 @@ def shop_by_category(id):
 @home.route('/productdetails/<int:id>/')
 def product_details(id):
 	
+	form = ProductVariations()
 	product_detail = Products.query.get_or_404(id)
 
 	return render_template("home/productdetails.html",
-	product_detail = product_detail,title = product_detail.product_name)
+	product_detail = product_detail,title = product_detail.product_name,form =form)
 
 @home.route('/add/<int:id>/')
 def add_to_cart(id):
@@ -51,6 +59,23 @@ def add_to_cart(id):
 	add product to the database 
 	with the db bullshit in the appropriate branch
 	'''
-	flash("item has been added to cart")
+	flash("{} has been added to cart".format(product_detail.product_name))
 	return render_template('home/productdetails.html',
-	product_detail = product_detail, title = product_detail.product_name+" added")
+	product_detail = product_detail, title = product_detail.product_name)
+
+
+@home.route('/productdetails/<int:id>/buy')
+def buynow(id):
+	product_detail = Products.query.get_or_404(id)
+
+	return render_template('home/buynow.html', product_detail = product_detail,
+	title ="Purchase "+ product_detail.product_name )
+
+
+'''
+@home.route('/checkout/<int:id>/')
+def checkout(id):
+	product_detail = Products.query.get_or_404(id)
+	return render_template('home/checkout.html',
+	product_detail = product_detail, title = "Purchase "+product_detail.product_name)
+'''

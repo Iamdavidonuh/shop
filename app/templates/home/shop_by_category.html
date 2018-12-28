@@ -1,22 +1,82 @@
-{% extends "header.html" %}
+{% extends "base.html" %}
 
 {% block body %}
 
 {% if category %}
-{% for product_list in category.product %}
-<a href="{{ url_for('home.product_details', id = product.id ) }}">
-<div class="cards">
-  {{ product_list.product_name }}
-  {{ product_list.product_price }} 
-  add product image 
- <!-- {{ product_list.product_image }} -->
+<style>
+    .title
+    {
+        margin: 0;
+        padding: 0;
+        margin-left: 20px;
+        margin-top: 6px;
+
+    }
+    .product-name
+    {
+        
+        font-family: Roboto,Helvetica,Arial,sans-serif;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 17px;
+        color: #000;
+        margin: 3px 0 5px 0;
+        text-align: left;
+        white-space: normal;
+        overflow: hidden;
+    }
+    .price{
+        
+        margin-left: 20px;
+        font-family: Roboto,Helvetica,Arial,sans-serif;
+        font-weight: 400;
+        font-size: 13px;
+        line-height: 17px;
+        color: #202020;
+        display: inline-block;
+    }
+</style>
+
+{% if category.product %}
+<div class="row">
+        {% for product_list in category.product %}
+	<a href="{{ url_for('home.product_details', id = product.id ) }}">
+        <div class="col l4 s12 m6" style="width: 25.33333%" >
+			<div class="card-panel hoverable" style="height:360px; background-color:#FFFFFF;">    
+                <div class="card-image" style="margin-left:auto;margin-right: auto;">
+                        <div class="thumbnail" style="height:220px;margin-bottom: 0px;">
+                            <img class="responsive-img" src="{{ product_list.product_image }}" style="height:100%;">
+                        </div>
+                        <h6 class="title">
+                            <span class="product-name">
+                                {{ product_list.product_name }}            
+                            </span>
+                        </h6>
+                        <div class="price-container clearfix">
+                            <span class="price-box" style="margin-bottom:0px;white-space:normal;">
+                                <span class="price">
+                                    <span>₦</span>
+                                    <span>{{ product_list.product_price }}</span>
+                                </span>
+                                
+                            </span>
+                        </div>
+				</div>
+			</div>
+		</div>
+	</a>
+		{% endfor %}
 </div>
-</a>
-<div class="cards">
-<p>
-    add product image and fix it templates well
-</p>
+{% else %}
+<div class="container-fluid">
+    <h2 class="center">
+        <p>
+            No products have been added for this category please come back later
+        </p>
+    </h2>
 </div>
-{% endfor %}
 {% endif %}
+    {% endif %}
+    
+
 {% endblock %}
