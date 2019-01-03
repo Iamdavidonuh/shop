@@ -1,52 +1,141 @@
+{% extends "base.html" %}
 <head>
-    <link href="{{ url_for('static', filename='css/cart.css') }}"
-rel="stylesheet" media="screen" title="no title" charset="utf-8">
+  
 </head>
-{% extends "header.html" %}
 {% block body %}
+<style>
+  .btn-xs
+  {
+    max-height: 22px;
+    max-width: 22px;
+  }
+  .btn-dark
+  {
+    background: #1f1f1f;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.1);
+    color: #fff;
+    text-decoration: none;
+    -webkit-transition: background .1s;
+    transition: background .1s;
 
-<meta name="robots" content="noindex,follow" />
+  }
 
-<body>
+  thead > tr > th, tbody > tr > td
+  {
+    text-align: center;
+  }
+</style>
 
-<div class="shopping-cart">
-  <!-- Title -->
-  <div class="title">
-    Shopping Bag
+<div class="container-fluid">
+  <div class="row">
+      <div class="span12" style="max-width: 860px;margin: 0 auto;">
+    <table class="table">
+
+      <thead>
+          <tr>
+            <th>Product</th>
+            <th>Description</th>
+            <!-- add stock optional -->
+            <th>Unit price</th>
+            <th>Qty </th>
+            <th></th>
+          </tr>
+      </thead>
+
+      <!-- table body -->
+      <tbody>
+          <tr>
+            <td><img width="100" src="assets/img/e.jpg" alt=""></td>
+            <td> <p> product description goes in here bitches </p> </td>
+            <td> product price </td>
+        <td>
+            <ul class="center list-inline" >
+                <li><button type="button" class="btn btn-dark btn-xs minus-btn" >-</button></li>
+                <li><input class="center Qty" type="text" size="2" readonly value="1"></li>
+                <li><button type="button" class="btn btn-dark btn-xs plus-btn" >+</button></li>
+              </ul>
+        </td>
+            <td>
+                <span class="iso">₦</span>
+                <span class="prod-price">100.00</span>
+            </td>
+          </tr>
+
+          <tr>
+              <td colspan="4" class="alignR">
+              <ul class="right list-inline">
+                
+                  <li> Items: </li>
+              </ul>
+              
+              </td>
+              <td class="alignR">
+                  <ul class="list-inline product-costs" >	
+                      <li>$product price * Qty</li> 
+                  </ul>
+    
+                  </td>
+            </tr>
+
+
+            <tr>
+                <td colspan="4" class="alignR">
+                <ul class="right list-inline">
+                      <li>Shipping costs:</li>	
+                    
+                </ul>
+  
+                </td>
+                <td class="alignR">
+                    <ul class="list-inline">	
+                        <li>$Shipping cost</li> 
+                    </ul>
+      
+                    </td>
+              </tr>
+  
+  
+
+
+          <tr>
+              <td colspan="4" class="alignR">
+              <ul class="right list-inline">
+                    <li>Total Price:</li>	
+                  
+              </ul>
+
+              </td>
+              <td class="alignR">
+                  <ul class="list-inline">	
+                      <li>$Items + Shipping</li> 
+                  </ul>
+    
+                  </td>
+            </tr>
+
+
+
+  </tbody>
+      </table><br/>
+
+
+
+
+
+    </table>
   </div>
-
-  <!-- Product #1 -->
-  <div class="item">
-    <div class="buttons">
-      <span class="delete-btn"></span>
-      <span class="like-btn"></span>
-    </div>
-
-    <div class="image">
-      <img src="item-1.png" alt="" />
-    </div>
-
-    <div class="description">
-      <span>Common Projects</span>
-      <span>Bball High</span>
-      <span>White</span>
-    </div>
-
-    <div class="quantity">
-      <button class="plus-btn" type="button" name="button">
-        <img src="plus.svg" alt="" />
-      </button>
-      <input type="text" name="name" value="1">
-      <button class="minus-btn" type="button" name="button">
-        <img src="minus.svg" alt="" />
-      </button>
-    </div>
-
-    <div class="total-price">$549</div>
   </div>
-
-
 </div>
+
+
+
+
+
+
+
+
+
+
 
 <script type="text/javascript">
   $('.minus-btn').on('click', function(e) {
@@ -83,6 +172,28 @@ rel="stylesheet" media="screen" title="no title" charset="utf-8">
   $('.like-btn').on('click', function() {
     $(this).toggleClass('is-active');
   });
+var Totalprod
+var productPrice
+$(function() {
+    var quantity
+    productPrice = $(".prod-price").text()
+    $(".plus-btn").click(function() {
+        quantity = $('.Qty').val();
+        $(".prod-price").text(productPrice*quantity)
+    });
+
+});
+
+$(function() {
+    var quantity
+    productPrice = $(".prod-price").text()
+    $(".minus-btn").click(function() {
+        quantity = $('.Qty').val();
+        $(".prod-price").text(productPrice*quantity)
+    });
+
+});
+
 </script>
 
 {% endblock %}

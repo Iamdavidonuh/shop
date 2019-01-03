@@ -112,21 +112,23 @@ class ProductVariations(db.Model):
 	products_id = db.Column(db.Integer, db.ForeignKey('product.id'))
 
 	def __repr__(self):
-		return '<ProductVariations {}>'.format(self.product_size)
+		return '<Variations for {} -- {}>'.format(self.products_id.product_name, self.product_size)
 
 
 
 class Kart(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-
+	product_name = db.Column(db.String, index =True)
 	#one cart many products (relationship)
 	product_kart = db.relationship('Products', backref='products_kart')
 	#foreign key for productid
-
-	#foreign key for userid
-	#indicating a one to one rel with user
+	
+	#foreign key for userid indicating a one to one rel with user
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+	#user and kart is one to one relationship
 	user = db.relationship('User', uselist=False, backref='user')
+	def __repr__(self):
+		return '<Cart {}>'.format(self.product_name)
 
 
 

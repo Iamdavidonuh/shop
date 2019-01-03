@@ -1,30 +1,70 @@
-{% extends "header.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% extends "base.html" %}
 
 {% block body %}
 {% if product_detail %}
 
-<p>
-    this is the details of {{ product_detail.product_name }}
-</p>
+<div class="container-fluid" style="max-width:90%; margin-left: auto; margin-right: auto;">
+    <div class="display pull-left" style=" width:50%;">
+                <img  class="responsive-img" src="{{ product_detail.product_image }}">
 
-<div>
-    <img src="{{ product_detail.product_image }}">
-    
+    </div>
+    <div class="details pull-right" style="width:40%;">
+        <div>
+                <h4>
+                        {{ product_detail.product_name }}
+                </h4>
+                <h5 style="font-size:19px">
+                    Stock: <span style="color:forestgreen;">{{ product_detail.product_stock }}</span>
+                </h5>
+                <article>
+                        <h5 style="font-size: 19px;">
+                                Description of {{ product_detail.product_name }}
+                         </h6>
+                         <p style="font-size:15px;">{{product_detail.product_description }}</p>
+                </article>
+                <section>
+                    <section>
+                        <form class="form-inline" method="POST">
+                            {{ form.hidden_tag() }}
+                            
 
-    <p>
-       Stock: {{ product_detail.product_stock }}
-    </p>
-    <b>
-        {{product_detail.product_description }}
-    </b>
- 
-    <!-- change button and render form from forms.py -->
-<a href="{{ url_for('home.add_to_cart', id = product_detail.id ) }}">
-    <input type="button" class="btn btn-primary" value="Add to cart">
-</a>
-<a href="{{ url_for('home.buynow', id = product_detail.id ) }}">
-    <input type="button" class="btn btn-primary" value="Buy now">
-</a>
+                        {% for subfield in form.sizes %}
+                        <div class="radio">
+                            <style>
+                                label
+                                {
+                                    margin-right: 5px;
+                                   font-size: 14px;
+                                    color:inherit;
+
+                                }
+                            </style>
+                                  {{ subfield }} 
+                                  {{ subfield.label }}  
+                        </div>
+                              
+                        {% endfor %}
+                    <div>
+                            {{ form.submit(class="btn btn-primary")}}   
+                            <!-- change button and render form from forms.py -->
+                            <a href="{{ url_for('home.buynow', id = product_detail.id ) }}">
+                           <input type="button" class="btn btn-primary" value="Buy now"> </a>
+                        </div>
+                  </section>
+                    
+                    </form>
+
+
+
+
+                </section>
+        </div>
+              
+
+        
+    </div>
+        
 </div>
 
 {% endif %}

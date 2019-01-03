@@ -11,6 +11,7 @@
     <link href="{{ url_for('static', filename='css/bootstrap.css') }}"rel="stylesheet">
 
 
+
 </head>
 <body>
 <header>
@@ -87,30 +88,55 @@
 		{% endwith %}
 
 
+<div class="container-fluid" style="max-width:85%;">
+
 
       {% block body %}
 
 
 
       {% endblock %}
-      <footer>
-        <div class="container">
+</div>
+      <footer style="margin-top:15px;">
+        <div class="container-fluid">
             <div class="row">
-                <div class="col-lg-12">
-                    <ul class="list-inline">
-                        <li><a href="{{ url_for('home.homepage') }}">Home</a></li>
-                        <li class="footer-menu-divider">⋅</li>
-                        {% if current_user.is_authenticated %}
-                            <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
-                        {% else %}
-                            <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+                                <div class="col l3 s8 m8 ">
+                        <ul class="list-inline">
+                            <li><a href="{{ url_for('home.homepage') }}">Home</a></li>
                             <li class="footer-menu-divider">⋅</li>
-                            <li><a href="{{ url_for('auth.login') }}">Login</a></li>
-                        {% endif %}
-                    </ul>
-                    <p class="copyright text-muted small">Copyright © 2019. All Rights Reserved</p>
-                </div>
+                            {% if current_user.is_authenticated %}
+                                <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
+                            {% else %}
+                                <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+                                <li class="footer-menu-divider">⋅</li>
+                                <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+                            {% endif %}
+                        </ul>
+                        <p class="copyright text-muted small">Copyright © 2019. All Rights Reserved</p>
+                    </div>
+
+
+                    <div class="col l3 s8 m8 ">
+                            <ul class="list-inline">
+                             <li>add details in the footer</li>
+                             <li>social media</li>    
+                            </ul>
+                            <p class="copyright text-muted small">Copyright © 2019. All Rights Reserved</p>
+                        </div>
+
+                        <div class="col l3 s8 m8 ">
+                                <ul class="list-inline">
+                                <li>sitemap etc</li>    
+                                </ul>
+                                <p class="copyright text-muted small">Copyright © 2019. All Rights Reserved</p>
+                            </div>
+    
+
+
+
             </div>
+
+
         </div>
       </footer>
 </body>

@@ -1,12 +1,12 @@
-from app import app
+from app import app, db
 from flask import ( render_template, request, redirect, url_for, session,
 	flash,Blueprint, abort
 	)
 
 from flask_login import current_user, login_required
 
-from app.models import Categories, Products
-from app.home.forms import ProductVariations
+from app.models import Categories, Products,Kart, ProductVariations
+from app.admin.forms import Variations
 
 home = Blueprint('home', __name__)
 
@@ -43,14 +43,26 @@ def shop_by_category(id):
 	product = product, title = "Category: "+ category.category_name)
 
 
-@home.route('/productdetails/<int:id>/')
+@home.route('/productdetails/<int:id>/', methods = ["GET","POST"])
 def product_details(id):
-	
-	form = ProductVariations()
-	product_detail = Products.query.get_or_404(id)
-
+	form = Variations() 
+	product_detail = Products.query.get_or_404(id)	
+	''' 
+	try pushing the forms to the admin blueprint and try and if error is 
+	same use the populate_obj() func
+	'''
+	if form.validate_on_submit():
+		variants = ProductVariations(product_size = form.sizes.data)
+		cart = Kart(product_name = product_detail.product_name)
+		db.session.add(variants)
+		db.session.add(cart)
+		db.session.commit()
+		flash("{} has been added to cart".format(product_detail.product_name))
+		return redirect(url_for('home.product_details',id = product_detail.id ))
 	return render_template("home/productdetails.html",
-	product_detail = product_detail,title = product_detail.product_name,form =form)
+		product_detail = product_detail,title = product_detail.product_name,form =form)
+
+
 
 @home.route('/add/<int:id>/')
 def add_to_cart(id):
@@ -78,4 +90,12 @@ def checkout(id):
 	product_detail = Products.query.get_or_404(id)
 	return render_template('home/checkout.html',
 	product_detail = product_detail, title = "Purchase "+product_detail.product_name)
+      <a href="{{ url_for('users.cart') }}">
+                            <input type="button" class="btn btn-primary" value="Add to cart">
+                        </a>    
+                    <!-- change button and render form from forms.py -->
+                          <a href="{{ url_for('home.buynow', id = product_detail.id ) }}">
+                              <input type="button" class="btn btn-primary" value="Buy now"> </a>
+              </section>
+
 '''

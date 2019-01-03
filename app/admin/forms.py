@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import ( StringField, SubmitField,TextAreaField,IntegerField,
-FloatField, validators
+FloatField, validators, RadioField
 )
 from wtforms.validators import DataRequired
 from wtforms.ext.sqlalchemy.fields import QuerySelectField 
@@ -30,3 +30,10 @@ class ProductsForm(FlaskForm):
 	stock = IntegerField('Stock', [validators.DataRequired()])
 	description = TextAreaField('describe the product', [validators.DataRequired()])
 	submit = SubmitField('Submit')
+
+
+class Variations(FlaskForm):
+    sizes = RadioField('Sizes',validators=[DataRequired(message="select a product size")],
+    choices=[('Small','S'),('Medium','M'),('Large','L'),('Extra Large','XL')])
+    submit =SubmitField('Add to Cart')
+

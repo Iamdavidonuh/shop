@@ -24,12 +24,10 @@ def logout():
 
 @auth.route('/register/', methods = ["GET","POST"])
 def register():
+	error = ''
 	form = RegistrationForm()
 	try:
-		error = ' '
-
 		if form.validate_on_submit():
-			flash("yeahhhh")
 			user = User(firstname = form.firstname.data, lastname = form.lastname.data,
 				email = form.email.data,phonenumber=form.phonenumber.data)
 			user.set_password(form.password.data)
@@ -42,7 +40,6 @@ def register():
 		return render_template('register.html', form = form, error= error, title = 'Register')
 
 	except Exception as e:
-		flash(e)
 		return render_template('register.html', form = form, error= error, title = "Register")
 
 
