@@ -24,7 +24,7 @@ def logout():
 
 @auth.route('/register/', methods = ["GET","POST"])
 def register():
-	error = ''
+	#error = ' '
 	form = RegistrationForm()
 	try:
 		if form.validate_on_submit():
@@ -36,11 +36,9 @@ def register():
 			gc.collect()
 			flash("Congratulations, Registration was successful")
 			return redirect(url_for('auth.login'))
-			flash(error)
 		return render_template('register.html', form = form, error= error, title = 'Register')
-
 	except Exception as e:
-		return render_template('register.html', form = form, error= error, title = "Register")
+		return render_template('register.html', form = form, title = "Register")
 
 
 @auth.route('/login/', methods=["GET", "POST"])

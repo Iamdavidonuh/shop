@@ -54,7 +54,7 @@
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">Profile</a></li>
+                        <li><a href="{{ url_for('users.profile') }}">Profile</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
                     </ul>
@@ -97,7 +97,7 @@
 
       {% endblock %}
 </div>
-      <footer style="margin-top:15px;">
+      <footer style="margin:25px 0px 0px 25px;">
         <div class="container-fluid">
             <div class="row">
                                 <div class="col l3 s8 m8 ">

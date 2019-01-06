@@ -1,0 +1,23 @@
+{% import "bootstrap/wtf.html" as wtf %}
+{% extends "base.html" %}
+{% block body %}
+<h1>
+        Welcome to you profile page
+</h1>
+{% if shipping == [] %}
+
+<div style="max-width:40%">
+{{ wtf.quick_form(form) }}
+</div>
+{% else %}
+{% for info in shipping %}
+
+        shipping data goes in here
+
+{% endfor %}
+
+{% endif %}
+<a href="{{ url_for('users.change_password') }}" class="right">change password</a>
+
+
+{% endblock %}

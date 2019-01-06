@@ -7,7 +7,6 @@ from wtforms.validators import ValidationError, DataRequired
 from app.models import User
 
 
-
 class RegistrationForm(FlaskForm):
 
 	firstname = StringField('First Name', [validators.Length(min=4,max=20)])
@@ -37,10 +36,11 @@ class RegistrationForm(FlaskForm):
 	def validate_phone(self, phonenumber):
 		user = User.query.filter_by(phonenumber=phonenumber.data).first()
 		if user is not None:
-			raise ValidationError("Email already in use. ")
+			raise ValidationError("phone number  already in use. ")
 
 #general login form
 class LoginForm(FlaskForm):
 	email = StringField('Email Address', [validators.DataRequired()])
 	password = PasswordField('Password', [validators.DataRequired()])
 	submit = SubmitField('Sign In')
+
