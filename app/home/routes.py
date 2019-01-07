@@ -37,7 +37,7 @@ def homepage():
 def shop_by_category(id):
 
 	category = Categories.query.get_or_404(id)
-	product = Products.query.get_or_404(id)
+	product = Products.query.get(id)
 
 	return render_template("home/shop_by_category.html", category = category,
 	product = product, title = "Category: "+ category.category_name)
@@ -83,19 +83,3 @@ def buynow(id):
 	return render_template('home/buynow.html', product_detail = product_detail,
 	title ="Purchase "+ product_detail.product_name )
 
-
-'''
-@home.route('/checkout/<int:id>/')
-def checkout(id):
-	product_detail = Products.query.get_or_404(id)
-	return render_template('home/checkout.html',
-	product_detail = product_detail, title = "Purchase "+product_detail.product_name)
-      <a href="{{ url_for('users.cart') }}">
-                            <input type="button" class="btn btn-primary" value="Add to cart">
-                        </a>    
-                    <!-- change button and render form from forms.py -->
-                          <a href="{{ url_for('home.buynow', id = product_detail.id ) }}">
-                              <input type="button" class="btn btn-primary" value="Buy now"> </a>
-              </section>
-
-'''
