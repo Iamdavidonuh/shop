@@ -24,7 +24,7 @@ def logout():
 
 @auth.route('/register/', methods = ["GET","POST"])
 def register():
-	#error = ' '
+	error = ' '
 	form = RegistrationForm()
 	if current_user.is_authenticated:
 		return redirect(url_for('home.homepage'))
