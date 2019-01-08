@@ -37,7 +37,7 @@ def homepage():
 def shop_by_category(id):
 
 	category = Categories.query.get_or_404(id)
-	product = Products.query.get_or_404(id)
+	product = Products.query.get(id)
 
 	return render_template("home/shop_by_category.html", category = category,
 	product = product, title = "Category: "+ category.category_name)
