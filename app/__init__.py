@@ -5,7 +5,7 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_bootstrap import Bootstrap
 from flask_uploads import configure_uploads,UploadSet,IMAGES
-
+from flask_mail import Mail
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -28,7 +28,7 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'auth.login'
 
 Bootstrap(app)
-
+mail = Mail(app)
 
 from app import models
 

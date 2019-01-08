@@ -8,6 +8,7 @@
     <h1>Login to your account</h1>
     <br/>
     {{ wtf.quick_form(form) }}
+    <a href="{{ url_for('users.reset_request') }}">Forgot Password?</a>
   </div>
 </div>
 {% endblock %}

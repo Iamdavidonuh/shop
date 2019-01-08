@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField,IntegerField, PasswordField, SubmitField, validators
 
-from wtforms.validators import ValidationError, DataRequired
+from wtforms.validators import ValidationError, DataRequired, Email
 
 from app.models import User
 
@@ -19,19 +19,25 @@ class ShippingForm(FlaskForm):
 
 
 
-class ResetPassword(FlaskForm):
+
+class RequestResetForm(FlaskForm):
+	email = StringField('Email Address', validators=[DataRequired(), Email()])
+	submit = SubmitField('Request Password Reset')
+
+	def validate_email(self, email):
+		user = User.query.filter_by(email=email.data).first()
+		if user is None:
+			raise ValidationError("There is no account with that email. You must register first")
+
+
+class ResetPasswordForm(FlaskForm):
+
 	password = PasswordField('Password', [validators.Length(min=8, max=25,
 		message="Password must be 8 to 25 characters long"), validators.Required()]
 	)
 	
 	confirm = PasswordField('Repeat Password', [validators.EqualTo('password',
 	 	message = "Passwords must match. ")]
-	)
+	 )
 	
-	submit = SubmitField('Submit')
-
-	def validate_password(self, password):
-		user = User.query.filter_by(current_user.email)
-		if User.check_password(user.password_hash,password) is True:
-			raise ValidationError("You cannot use a previously selected")
-
+	submit = SubmitField('Reset Password')
