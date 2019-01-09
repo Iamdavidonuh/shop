@@ -3,7 +3,7 @@ from flask import (render_template, request, redirect, url_for, session,
 	flash, Blueprint
 	)
 
-from app.models import User, ShippingInfo
+from app.models import User, ShippingInfo, Kart
 
 import gc
 
@@ -17,11 +17,17 @@ users = Blueprint('users', __name__)
 
 @users.route('/cart/')
 def cart():	
-	return render_template('users/cart.html')
+	counter = Kart.query.filter_by(product_id =Kart.product_id).count()
+	# fetch cart data 
+	cartlist = Kart.query.filter_by(user_id=Kart.user_id)
+	return render_template('users/cart.html', counter = counter, cartlist= cartlist,
+	title = "Cart")
 
 
 @users.route('/profile/')
 def profile():
+	counter = Kart.query.filter_by(product_id =Kart.product_id).count()
+
 	form = ShippingForm()
 	shipping = ShippingInfo.query.all()
 	if form.validate_on_submit():
@@ -33,7 +39,7 @@ def profile():
 		flash('shipping information was submitted successfully')
 		return redirect(url_for('users.profile'))
 	return render_template('users/profile.html', title = "Account page",form=form,
-	shipping = shipping)
+	shipping = shipping, counter=counter)
 
 
 def send_reset_email(user):

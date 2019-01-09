@@ -101,8 +101,6 @@ class Products(db.Model):
 	product_stock = db.Column(db.Integer, index = True)
 	#foreign key to categories
 	categories_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
-	#foreign key to kart
-	kart_id = db.Column(db.Integer, db.ForeignKey('kart.id'))
 	#one to many relationship btwn products and productsvariations
 	variation = db.relationship('ProductVariations', backref='product_variation')
 	'''
@@ -132,17 +130,14 @@ class ProductVariations(db.Model):
 
 class Kart(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	product_name = db.Column(db.String, index =True)
-	#one cart many products (relationship)
-	product_kart = db.relationship('Products', backref='products_kart')
-	#foreign key for productid
-	
-	#foreign key for userid indicating a one to one rel with user
+	product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
+	product = db.relationship('Products', uselist=False)
+	quantity = db.Column(db.Integer)
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 	#user and kart is one to one relationship
 	user = db.relationship('User', uselist=False, backref='user')
 	def __repr__(self):
-		return '<Cart {}>'.format(self.product_name)
+		return '<Cart {}>'.format(self.product.product_name)
 
 
 

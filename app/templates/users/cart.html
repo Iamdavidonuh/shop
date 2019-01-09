@@ -33,8 +33,8 @@
 
       <thead>
           <tr>
+            <th></th>
             <th>Product</th>
-            <th>Description</th>
             <!-- add stock optional -->
             <th>Unit price</th>
             <th>Qty </th>
@@ -44,10 +44,13 @@
 
       <!-- table body -->
       <tbody>
-          <tr>
+
+{% for items in cartlist %}
+    <tr>
+                
             <td><img width="100" src="assets/img/e.jpg" alt=""></td>
-            <td> <p> product name </p> </td>
-            <td> product price </td>
+            <td> <p> {{ items.product.product_name }} </p> </td>
+            <td class="unit-price"> {{ items.product.product_price }} </td>
         <td>
             <ul class="center list-inline" >
                 <li><button type="button" class="btn btn-dark btn-xs minus-btn" >-</button></li>
@@ -55,11 +58,16 @@
                 <li><button type="button" class="btn btn-dark btn-xs plus-btn" >+</button></li>
               </ul>
         </td>
-            <td>
-                <span class="iso">₦</span>
-                <span class="prod-price">100.00</span>
-            </td>
-          </tr>
+        
+        <td>
+            <span class="iso">₦</span>
+            <span class="prod-price">{{ items.product.product_price }}</span>
+        </td>
+            
+    </tr>
+
+          
+{% endfor %}
 
           <tr>
               <td colspan="4" class="alignR">
@@ -116,6 +124,7 @@
 
 
   </tbody>
+  
       </table><br/>
 
 
@@ -126,12 +135,6 @@
   </div>
   </div>
 </div>
-
-
-
-
-
-
 
 
 
@@ -169,30 +172,8 @@
         $input.val(value);
     });
 
-  $('.like-btn').on('click', function() {
-    $(this).toggleClass('is-active');
-  });
-var Totalprod
-var productPrice
-$(function() {
-    var quantity
-    productPrice = $(".prod-price").text()
-    $(".plus-btn").click(function() {
-        quantity = $('.Qty').val();
-        $(".prod-price").text(productPrice*quantity)
-    });
 
-});
 
-$(function() {
-    var quantity
-    productPrice = $(".prod-price").text()
-    $(".minus-btn").click(function() {
-        quantity = $('.Qty').val();
-        $(".prod-price").text(productPrice*quantity)
-    });
-
-});
 
 </script>
 

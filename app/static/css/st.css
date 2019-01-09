@@ -1,0 +1,23 @@
+img.responsive-img, video.responsive-video {
+    max-width: 100%;
+    height: auto;
+}
+
+.card-panel{
+    -webkit-transition:-webkit-box-shadow .25s;
+    transition:-webkit-box-shadow .25s;
+    transition:box-shadow .25s;
+    transition:box-shadow .25s, -webkit-box-shadow .25s;padding:24px;
+    margin:.5rem 0 1rem 0; border-radius:2px;background-color:#fff;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
+}
+.hoverable{
+    -webkit-transition:-webkit-box-shadow .25s;
+    transition:-webskit-box-shadow .25s;
+    transition:box-shadow .25s;
+    transition:box-shadow .25s, -webkit-box-shadow .25s}
+.hoverable:hover
+{-webkit-box-shadow:0 8px 17px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    box-shadow:0 8px 17px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19)
+}
+
