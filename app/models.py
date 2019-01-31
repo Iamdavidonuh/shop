@@ -107,6 +107,7 @@ class Products(db.Model):
 		using many to many for now	
 		#many many rel with order
 	'''
+	
 	order = db.relationship("Order", secondary = association_table)
 
 	def __repr__(self):
@@ -118,12 +119,13 @@ class Products(db.Model):
 variations(many) relationship)'''
 class ProductVariations(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
-	variant = db.relationship('Products', uselist=False)
 	product_size = db.Column(db.String(5), index = True)
 	product_color = db.Column(db.String(10), index=True)
+	product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
+	variants = db.relationship('Products', uselist = False)
+
 	def __repr__(self):
-		return '<Variations for {} -- {}>'.format(self.variant.product_name, self.product_size)
+		return '<Variations for {} -- {}>'.format(self.variants.product_name, self.product_size)
 
 
 
