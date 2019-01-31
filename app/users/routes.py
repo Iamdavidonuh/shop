@@ -1,6 +1,6 @@
 from app import app
 from flask import (render_template, request, redirect, url_for, session,
-	flash, Blueprint
+	flash, Blueprint, jsonify
 	)
 
 from app.models import User, ShippingInfo, Kart
@@ -9,37 +9,68 @@ import gc
 
 from flask_login import (current_user, login_user, logout_user, login_required
 	)
-from app.users.forms import ShippingForm,RequestResetForm,ResetPasswordForm
+from app.users.forms import (ShippingForm,RequestResetForm,ResetPasswordForm,
+	CartForm)
 from app import db, mail
 from flask_mail import Message
 
 users = Blueprint('users', __name__)
 
-@users.route('/cart/')
+@users.route('/cart/',methods = ["GET","POST"])
 def cart():	
-	counter = Kart.query.filter_by(product_id =Kart.product_id).count()
+	#cart_item = Kart.query.get_or_404(id)
+	count = Kart.query.filter_by(product_id =Kart.product_id).count()
+	form = CartForm()
 	# fetch cart data 
 	cartlist = Kart.query.filter_by(user_id=Kart.user_id)
-	return render_template('users/cart.html', counter = counter, cartlist= cartlist,
-	title = "Cart")
+	shipping = ShippingInfo.query.all()
+	#for annoymous users
+	if current_user.is_anonymous:
+		flash('please login or register to be able to add a shipping address')			
+		return render_template('users/cart.html', count= count, cartlist= cartlist,
+	title = "Cart", form = form)
+	
+	#for authenticated users
+	if current_user.is_authenticated:
+		if current_user.shipping:
+			flash("please add a shipping address in your profile")
+			return render_template('users/cart.html', count= count, cartlist= cartlist,
+		title = "Cart", form = form)
+	return render_template('users/cart.html', count= count, cartlist= cartlist,
+	title = "Cart", form = form)
+
+
+@users.route('/cart/update/<int:id>',methods = ["POST"])
+def quantity_update(id):
+	cart_item = Kart.query.get_or_404(id)
+	cart_item.quantity = request.form["quantity"]
+	db.session.commit()		
+	return jsonify({"result":"success"})
+
+@users.route('/cart/remove/<int:id>',methods = ["GET","POST"])
+def remove_item(id):
+	cart_item = Kart.query.get_or_404(id)
+	db.session.delete(cart_item)
+	db.session.commit()
+	return redirect(url_for('users.cart'))
 
 
 @users.route('/profile/')
 def profile():
-	counter = Kart.query.filter_by(product_id =Kart.product_id).count()
+	count = Kart.query.filter_by(product_id =Kart.product_id).count()
 
 	form = ShippingForm()
 	shipping = ShippingInfo.query.all()
 	if form.validate_on_submit():
 		info = ShippingInfo(address1=form.address1.data,address2=form.address2.data,
 		postcode=form.postcode.data,city=form.city.data,
-		state=form.state.data,country=form.country.data)
+		state=form.state.data,country=request.country.data)
 		db.session.add(info)
 		db.session.commit()
 		flash('shipping information was submitted successfully')
 		return redirect(url_for('users.profile'))
 	return render_template('users/profile.html', title = "Account page",form=form,
-	shipping = shipping, counter=counter)
+	shipping = shipping, count=count)
 
 
 def send_reset_email(user):

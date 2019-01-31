@@ -4,18 +4,18 @@
 <head>
     <title> {{ title }} </title>
     
-    
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
-    <link href="{{ url_for('static', filename='css/st.css') }}"rel="stylesheet">
+
     <link href="{{ url_for('static', filename='css/bootstrap.css') }}"rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/st.css') }}"rel="stylesheet">
+    {%block head %}
+    {% endblock %}
 
 
 
 </head>
 <body>
 <header>
-
+<!--
     <script>
     $('#myTabs a').click(function (e) {
 
@@ -23,6 +23,7 @@
         $(this).tab('show')
         })
     </script>
+    -->
 </header>
 
 <div class="container-fluid">
@@ -45,7 +46,7 @@
                 <li><a href="{{ url_for('admin.list_products') }}">Products</a></li>
                 <li><a href="#">Orders</a></li>
             {% else %}
-                <li><a href="{{ url_for('users.cart') }}">Cart <span class="badge">{{ counter }}</span></a></li>
+                <li><a href="{{ url_for('users.cart') }}">Cart <span class="badge">{{ count }}</span></a></li>
             {% endif %}
 
                 <li class="dropdown">
@@ -89,7 +90,11 @@
 
 
 <div class="container-fluid" style="max-width:85%;">
-
+        <script src="{{ url_for('static', filename='js/jquery-3.3.1.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/bootstrap-select.min.js') }}"></script> 
+        <script src="{{ url_for('static', filename='js/countrypicker.js') }}"></script>
 
       {% block body %}
 
@@ -97,6 +102,7 @@
 
       {% endblock %}
 </div>
+
       <footer style="margin:25px 0px 0px 25px;">
         <div class="container-fluid">
             <div class="row">
@@ -139,5 +145,7 @@
 
         </div>
       </footer>
+
+ 
 </body>
 </html>

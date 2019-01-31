@@ -1,13 +1,96 @@
 {% import "bootstrap/wtf.html" as wtf %}
 {% extends "base.html" %}
+
+{% block head %}
+<link rel="stylesheet" href="{{url_for('static', filename ='bootstrap-select.min.css')}}">
+{% endblock %}
+
+
+
 {% block body %}
-<h1>
-        Welcome to you profile page
-</h1>
+<h3>
+        Welcome to your profile page
+</h3>
+
+<div>
+<ul>
+<li>{{current_user.firstname }}</li>
+<li>{{current_user.lastname }}</li>
+<li>{{ current_user.email }}</li>
+<li>{{current_user.phonenumber }}</li>
+
+<a href="{{ url_for('users.reset_request') }}" class="right">change password</a>
+</ul>
+
+</div>
 {% if shipping == [] %}
 
-<div style="max-width:40%">
-{{ wtf.quick_form(form) }}
+<div  class="container">
+<div style="max-width:40%;">
+        
+        <form class="form" method="POST">
+                        {{ form.hidden_tag() }}
+                        <div class="form-group  required"><label class="control-label" for="Primary Address">{{ form.address1.label }}</label>
+                                {{ form.address1(class="form-control") }}
+
+                              
+                        </div>
+                        <div class="form-group  required"><label class="control-label" for="Secondary Address">{{ form.address2.label }}</label>
+                                {{ form.address2(class="form-control") }}
+
+                              
+                        </div>
+                        <div class="form-group  required">
+                                <label class="control-label" for="Postal Code">
+                                {{ form.postcode.label }}
+                                </label>
+                                {{ form.postcode(class="form-control") }}
+
+                              
+                        </div>
+
+                        <div class="form-group  required">
+                                        <label class="control-label" for="City">
+                                        {{ form.city.label }}
+                                        </label>
+                                        {{ form.city(class="form-control") }}
+        
+                                      
+                        </div>
+
+                        <div class="form-group  required">
+                                        <label class="control-label" for="State">
+                                        {{ form.state.label }}
+                                        </label>
+                                        {{ form.state(class="form-control") }}
+        
+                                      
+                        </div>
+
+                        <div class="form-group  required">
+                                        <label class="control-label" for="Country">
+                                        Country
+                                        </label>
+                                        <select class="selectpicker countrypicker form-control"
+                                        data-live-search="true"
+                                        data-default="Nigeria"
+                                        data-flag="true" name="country"> 
+                                        </select>
+        
+                                      
+                        </div>
+
+             
+                        {{ form.submit(class="btn btn-primary")}}   
+                        <!-- change button and render form from forms.py -->
+                    </div>
+              </section>
+                
+                </form>
+
+        
+
+</div>
 </div>
 {% else %}
 {% for info in shipping %}
@@ -17,7 +100,8 @@
 {% endfor %}
 
 {% endif %}
-<a href="{{ url_for('users.reset_request') }}" class="right">change password</a>
+
+
 
 
 {% endblock %}

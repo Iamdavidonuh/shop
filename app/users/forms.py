@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField,IntegerField, PasswordField, SubmitField, validators
+from wtforms import(StringField,IntegerField, PasswordField,
+SubmitField, validators, SelectField)
 
 from wtforms.validators import ValidationError, DataRequired, Email
 
@@ -7,14 +8,18 @@ from app.models import User
 
 from flask_login import current_user
 
+class CartForm(FlaskForm):
+	quantity = IntegerField('1', validators=[DataRequired()])
+	submit = SubmitField('Submit')
 
 class ShippingForm(FlaskForm):
     address1 = StringField('Primary Address',validators=[DataRequired()]) 
     address2 = StringField('Secondary Address', validators=[DataRequired()])
     postcode = IntegerField('Postal code', validators=[DataRequired()])
     city = StringField('City', validators=[DataRequired()])
-    state = StringField('state', validators=[DataRequired()])
-    country = StringField('Country', validators=[DataRequired()])
+    state = StringField('State', validators=[DataRequired()])
+    #country = SelectField('Country', validators=[DataRequired()])
+	#country = StringField('Country', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 
