@@ -134,6 +134,7 @@ class Kart(db.Model):
 	product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
 	product = db.relationship('Products', uselist=False)
 	quantity = db.Column(db.Integer)
+	subtotal = db.Column(db.Integer)
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 	#user and kart is one to one relationship
 	user = db.relationship('User', uselist=False, backref='user')

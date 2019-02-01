@@ -44,14 +44,12 @@ def product_details(id):
 	form = Variations() 
 	product_detail = Products.query.get_or_404(id)
 	user = User.query.get(id)	
-	''' 
-	try pushing the forms to the admin blueprint and try and if error is 
-	same use the populate_obj() func
-	'''
+	
 	count = Kart.query.filter_by(product_id =Kart.product_id).count()
 	if form.validate_on_submit():
 		variants = ProductVariations(product_size = form.sizes.data,product_id=product_detail.id)
-		cart = Kart(user_id=user.id, product_id=product_detail.id, quantity=1)
+		cart = Kart(user_id=user.id, product_id=product_detail.id, quantity=1,
+		subtotal = product_detail.product_price)
 		db.session.add(variants)
 		db.session.add(cart)
 		db.session.commit()

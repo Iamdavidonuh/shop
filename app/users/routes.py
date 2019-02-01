@@ -16,9 +16,9 @@ from flask_mail import Message
 
 users = Blueprint('users', __name__)
 
+
 @users.route('/cart/',methods = ["GET","POST"])
 def cart():	
-	#cart_item = Kart.query.get_or_404(id)
 	count = Kart.query.filter_by(product_id =Kart.product_id).count()
 	form = CartForm()
 	# fetch cart data 
@@ -39,13 +39,15 @@ def cart():
 	return render_template('users/cart.html', count= count, cartlist= cartlist,
 	title = "Cart", form = form)
 
-
 @users.route('/cart/update/<int:id>',methods = ["POST"])
 def quantity_update(id):
 	cart_item = Kart.query.get_or_404(id)
-	cart_item.quantity = request.form["quantity"]
+	quantity = request.form["quantity"]
+	cart_item.quantity = quantity
+	item_total = cart_item.product.product_price * int(quantity)
+	cart_item.subtotal = item_total
 	db.session.commit()		
-	return jsonify({"result":"success"})
+	return jsonify({"result":"success", "item_total":item_total})
 
 @users.route('/cart/remove/<int:id>',methods = ["GET","POST"])
 def remove_item(id):
