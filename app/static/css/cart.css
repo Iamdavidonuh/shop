@@ -79,12 +79,12 @@ p,h1, h3, input, ul, h6 ,h5{
 	padding-bottom: 5px;
 }
 .item-img{
-	width: 5em;
-	height: 4em;
-	display: inline;
-	padding-right: 1em;
-	margin-top: 2px;
-	margin-bottom: 4px;
+    width:5em;
+	height:4em;
+	display:inline;
+	padding-right:1em;
+	margin-top:2px;
+	margin-bottom:4px;
 }
 
 .item-name {
@@ -107,6 +107,12 @@ p,h1, h3, input, ul, h6 ,h5{
     color: #777777;
     font-family: "Montserrat", sans-serif;
     display: inline-block;
+}
+
+div.small
+{
+    color:green;
+    line-height: 2;
 }
 
  
@@ -189,19 +195,20 @@ a.remove:hover {
 }
 .subtotal .totalRow .label {
     font-family: "Montserrat", sans-serif;
-    font-size: .85em;
-    text-transform: uppercase;
+    font-size: 1.16em;
+    font-weight: normal;
     color: #777;
 }
-.subtotal .totalRow span {
+.subtotal .totalRow span.label {
     display: inline-block;
     padding: 0 0 0 1em;
     text-align: right;
+    margin-right: 35px;
 }
 
 .subtotal .totalRow .value {
     letter-spacing: -.025em;
-    width: 35%;
+    
     font-size: 1.15em;
     font-weight: 100;
 }
@@ -309,6 +316,14 @@ a.remove:hover {
 
 }
 
+#loading
+{
+    height: 16px;
+    display: inline-block;
+    width: 18px;
+    margin-left: 4px;
+
+}
 .loading
 {
     background: #fff url('../cart-loader.gif')no-repeat;

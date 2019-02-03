@@ -3,7 +3,7 @@ from flask import (render_template, request, redirect, url_for, session,
 	flash, Blueprint, jsonify
 	)
 
-from app.models import User, ShippingInfo, Kart
+from app.models import User, ShippingInfo, Kart,ProductVariations
 
 import gc
 
@@ -16,6 +16,33 @@ from flask_mail import Message
 
 users = Blueprint('users', __name__)
 
+def ShippingPrice():
+	'''
+	calculate the price of shipping if items is greater than 5 shipping is 2500
+	else 1200
+	'''
+	item_num = Kart.query.filter_by(id = Kart.id).count()
+	shipping_price = 0
+	#item_lists = Kart.query.filter_by(id=Kart.id)
+	if item_num >= 1:
+		shipping_price = 1200
+	elif item_num >= 5:
+		shipping_price = 2500
+	else:
+		pass
+	return shipping_price
+
+'''
+cart variables
+'''
+#items_subtotal=0
+
+def subtotals():
+	items_subtotal = 0
+	get_products = Kart.query.filter_by(subtotal = Kart.subtotal).all()
+	for price in get_products:
+		items_subtotal+=int(price.subtotal)
+	return items_subtotal
 
 @users.route('/cart/',methods = ["GET","POST"])
 def cart():	
@@ -24,20 +51,24 @@ def cart():
 	# fetch cart data 
 	cartlist = Kart.query.filter_by(user_id=Kart.user_id)
 	shipping = ShippingInfo.query.all()
+	variants = ProductVariations.query.filter_by(product_id = ProductVariations.product_id)
+	price = ShippingPrice()
+	items_subtotals = subtotals() 
 	#for annoymous users
 	if current_user.is_anonymous:
 		flash('please login or register to be able to add a shipping address')			
 		return render_template('users/cart.html', count= count, cartlist= cartlist,
-	title = "Cart", form = form)
+	title = "Cart", form = form, price=price, variants = variants,items_subtotals=items_subtotals)
 	
 	#for authenticated users
 	if current_user.is_authenticated:
-		if current_user.shipping:
+		if current_user.shipping==[]:
 			flash("please add a shipping address in your profile")
 			return render_template('users/cart.html', count= count, cartlist= cartlist,
-		title = "Cart", form = form)
+		title = "Cart", form = form,price=price, variants= variants)
+
 	return render_template('users/cart.html', count= count, cartlist= cartlist,
-	title = "Cart", form = form)
+	title = "Cart", form = form, price=price, variants=variants,items_subtotals=items_subtotals)
 
 @users.route('/cart/update/<int:id>',methods = ["POST"])
 def quantity_update(id):
@@ -46,8 +77,9 @@ def quantity_update(id):
 	cart_item.quantity = quantity
 	item_total = cart_item.product.product_price * int(quantity)
 	cart_item.subtotal = item_total
+	items_subtotal = subtotals()
 	db.session.commit()		
-	return jsonify({"result":"success", "item_total":item_total})
+	return jsonify({"result":"success", "item_total":item_total, "subtotal":items_subtotal})
 
 @users.route('/cart/remove/<int:id>',methods = ["GET","POST"])
 def remove_item(id):

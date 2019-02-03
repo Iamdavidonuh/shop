@@ -17,13 +17,20 @@
 		<div class="innerbox">
 			<div class="cart-content">
 				<ul class="item-wrapper">
-                        {% for items in cartlist %}
-					<li class="cart-items">
+						{% for items in cartlist %}
+					<li id="cart_items" class="cart-items">
 						<div class="infoWrap">
 							<div class="item-description">
 								<img src="{{ items.product.product_image }}" class="item-img">
 								<h6 class="item-name">
-										{{ items.product.product_name }} 
+										{% for variant in variants %}
+										{{ items.product.product_name }}
+										<br>
+									<div class="small">
+										<span>Size:</span> 
+										<span>{{ variant.product_size }}</span>
+									</div>
+										{% endfor %} 
 								</h6>
 								<br>
 								<div class="xtra">
@@ -31,17 +38,19 @@
 										<p>
 												<input type="text" name="quantity" class="qty" id="qty{{items.id}}", value="{{items.quantity}}">
 											  x <span class="iso">₦</span> <span class="item-price{{items.id}}"> {{ items.product.product_price }}</span>
+											  <p> <span id="loading" ></span> </p>
 										</p>
+										
 									</form>
 									<p class="stockStatus">
 										In Stock
 									</p>
-									<p> <span id="loading">load..</span> </p>
+									
 								</div>
 
 							</div>
 							<div class="prod-total item-description">
-								<p> <span class="iso">₦</span> <span class="item-total{{items.id}}">{{items.subtotal}}</span></p>
+								<p> <span class="iso">₦</span> <span class="item-total{{items.id}} item-total">{{items.subtotal}}</span></p>
 							</div>
 
 							<div class="remove-item item-description">
@@ -49,7 +58,7 @@
 							</div>
 						</div>
 					</li>
-					{%include 'includes/cartjs.html'%}
+					
                     {% endfor %}
 				</ul>
 
@@ -64,10 +73,19 @@
 <footer class="cart-footer">
 	<div class="subtotal cf">
     <ul>
-      <li class="totalRow"><span class="label">Subtotal</span><span class="value">$35.00</span></li>
-      
-          <li class="totalRow"><span class="label">Shipping</span><span class="value">$5.00</span></li>
-            <li class="totalRow final"><span class="label">Total</span><span class="value">$44.00</span></li>
+	  <li class="totalRow"><span class="label">Subtotal</span>
+		<span class="iso">₦</span>
+		<span id="subtotal_value" class="value">{{items_subtotals}}</span>
+	</li>
+	<li class="totalRow"><span class="label">Shipping</span>
+		<span class="iso">₦</span>
+		<span id="shipping_price" class="value">{{ price }}</span>
+	</li>
+
+	<li class="totalRow final"><span class="label">Total</span>
+		<span class="iso">₦</span>
+		<span id="total-final" class="value">{{items_subtotals + price}}</span>
+	</li>
     </ul>
   </div>
 		<div class="checkoutcontainer">
@@ -81,8 +99,53 @@
 	</span>
 </footer>
 </div>
+{% for items in cartlist %}
+<script>
+	
 
+	window.onload = subtotal;
+	function subtotal()
+	{
 
+		var item;
+		var items = document.getElementById("cart_items").getElementsByClassName("prod-total");
+		for (var i = 0; i<items.length; i++)
+		{
+			item = items[i];
+			var subtotal = 0;
+			item.getElementById
+			subtotal += parseFloat($(".item-total").text());
+		} 
+		return subtotal;
+	}
+
+	$(document).ready(function(){
+		$(document).on('blur','#qty{{items.id }}', function(){
+		var quantity =parseInt($("#qty{{items.id}}").val());
+		$("#subtotal_value").text(subtotal);
+		$("#qty{{items.id }}").addClass("disabled");
+		$("#loading").addClass("loading");
+		req = $.ajax({
+			url:"{{url_for('users.quantity_update',id = items.id)}}",
+			type:"POST",
+			data: {quantity:quantity}
+		});
+		//remove loading class here
+		req.done(function(data){
+			$("#loading").removeClass("loading");
+			$("#qty{{items.id }}").removeClass("disabled");
+			//$("#qty{{items.id}}").fadeOut(1000).fadeIn(1000);
+			new_price = $(".item-total{{items.id}}").text(data.item_total).fadeOut(100).fadeIn(1000);
+			$("#subtotal_value").text(data.subtotal);
+			$("#total-final").text(parseFloat($("#subtotal_value").text()) + parseFloat({{price}}));
+		});
+		
+		
+});
+});
+
+</script>
+{% endfor %}
 </body>
 
 
