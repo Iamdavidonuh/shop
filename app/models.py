@@ -101,6 +101,7 @@ class Products(db.Model):
 	product_stock = db.Column(db.Integer, index = True)
 	#foreign key to categories
 	categories_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
+	#variation = db.relationship('ProductVariations', backref='product_variation')
 	'''
 		foreign key for product.id
 		test this weda its one order several products or several orders, serveral products
@@ -122,6 +123,13 @@ class ProductVariations(db.Model):
 	product_size = db.Column(db.String(5), index = True)
 	product_color = db.Column(db.String(10), index=True)
 	product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
+	'''
+	products_id = db.Column(db.Integer, db.ForeignKey('product.id'))
+
+	def __repr__(self):
+		return '<Variations for {} -- {}>'.format(self.products_id.product_name, self.product_size)
+
+	'''
 	variants = db.relationship('Products', uselist = False)
 
 	def __repr__(self):
