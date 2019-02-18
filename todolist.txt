@@ -1,0 +1,40 @@
+
+-----------------------------------------
+edit the cart and add items in cart
+show the variants once added to cart
+change cart icon to cart image 
+
+
+
+----------------------------------------------
+
+$(function() {
+    var quantity
+    unitPrice = $(".unit-price").text()
+    $('.prod-price').text(unitPrice)
+
+});
+
+
+
+var Totalprod
+var productPrice
+$(function() {
+    var quantity
+    productPrice = $(".prod-price").text()
+    $(".plus-btn").click(function() {
+        quantity = $('.Qty').val();
+        $(".prod-price").text(productPrice*quantity)
+    });
+
+});
+
+$(function() {
+    var quantity
+    productPrice = $(".prod-price").text()
+    $(".minus-btn").click(function() {
+        quantity = $('.Qty').val();
+        $(".prod-price").text(productPrice*quantity)
+    });
+
+});

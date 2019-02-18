@@ -60,13 +60,6 @@ def cart():
 		return render_template('users/cart.html', count= count, cartlist= cartlist,
 	title = "Cart", form = form, price=price, variants = variants,items_subtotals=items_subtotals)
 	
-	#for authenticated users
-	if current_user.is_authenticated:
-		if current_user.shipping==[]:
-			flash("please add a shipping address in your profile")
-			return render_template('users/cart.html', count= count, cartlist= cartlist,
-		title = "Cart", form = form,price=price, variants= variants)
-
 	return render_template('users/cart.html', count= count, cartlist= cartlist,
 	title = "Cart", form = form, price=price, variants=variants,items_subtotals=items_subtotals)
 

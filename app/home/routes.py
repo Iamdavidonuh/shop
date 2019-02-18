@@ -41,11 +41,13 @@ def shop_by_category(id):
 
 @home.route('/productdetails/<int:id>/', methods = ["GET","POST"])
 def product_details(id):
-	form = Variations() 
+	form = Variations()
 	product_detail = Products.query.get_or_404(id)
+	
 	user = User.query.get(id)	
 	
 	count = Kart.query.filter_by(product_id =Kart.product_id).count()
+	
 	if form.validate_on_submit():
 		variants = ProductVariations(product_size = form.sizes.data,product_id=product_detail.id)
 		cart = Kart(user_id=user.id, product_id=product_detail.id, quantity=1,
@@ -53,8 +55,8 @@ def product_details(id):
 		db.session.add(variants)
 		db.session.add(cart)
 		db.session.commit()
-		flash("{} has been added to cart".format(product_detail.product_name))
-		
+
+		flash("{} has been added to cart".format(product_detail.product_name))	
 		return redirect(url_for('home.product_details',id = product_detail.id ))
 	return render_template("home/productdetails.html",
 		product_detail = product_detail,title = product_detail.product_name,
