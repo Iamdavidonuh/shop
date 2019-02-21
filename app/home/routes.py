@@ -5,7 +5,7 @@ from flask import ( render_template, request, redirect, url_for, session,
 
 from flask_login import current_user, login_required
 
-from app.models import User, Categories, Products,Kart, ProductVariations
+from app.models import User, Categories, Products,Kart
 from app.admin.forms import Variations
 
 home = Blueprint('home', __name__)
@@ -47,12 +47,16 @@ def product_details(id):
 	user = User.query.get(id)	
 	
 	count = Kart.query.filter_by(product_id =Kart.product_id).count()
-	
+	# add to cart
 	if form.validate_on_submit():
-		variants = ProductVariations(product_size = form.sizes.data,product_id=product_detail.id)
+		# annonymous users
+		if current_user.is_anonymous:
+			flash('please login before you can add items to your shopping cart')
+			return redirect(url_for("home.product_details",id = product_detail.id))
+		# authenticated users
+		product_detail.product_size = form.sizes.data
 		cart = Kart(user_id=user.id, product_id=product_detail.id, quantity=1,
 		subtotal = product_detail.product_price)
-		db.session.add(variants)
 		db.session.add(cart)
 		db.session.commit()
 

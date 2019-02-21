@@ -80,15 +80,14 @@ p,h1, h3, input, ul, h6 ,h5{
 }
 .item-img{
     width:5em;
-	height:4em;
+    height: 4em;
 	display:inline;
 	padding-right:1em;
-	margin-top:2px;
-	margin-bottom:4px;
+	margin-top: 2px;
+	margin-bottom: 4px;
 }
 
 .item-name {
-	position: absolute;
 	top: 7%;
 	font-size: .88em;
     font-family: "Montserrat", sans-serif;
@@ -316,7 +315,7 @@ a.remove:hover {
 
 }
 
-#loading
+.loading_bkg
 {
     height: 16px;
     display: inline-block;

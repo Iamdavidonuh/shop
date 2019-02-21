@@ -23,14 +23,14 @@
 							<div class="item-description">
 								<img src="{{ items.product.product_image }}" class="item-img">
 								<h6 class="item-name">
-										{% for variant in variants %}
-										{{ items.product.product_name }}
+									{{ items.product.product_name }}	
+									
 										<br>
 									<div class="small">
 										<span>Size:</span> 
-										<span>{{ variant.product_size }}</span>
+										<span>{{ items.product.product_size }}</span>
 									</div>
-										{% endfor %} 
+										
 								</h6>
 								<br>
 								<div class="xtra">
@@ -38,7 +38,7 @@
 										<p>
 												<input type="text" name="quantity" class="qty" id="qty{{items.id}}", value="{{items.quantity}}">
 											  x <span class="iso">₦</span> <span class="item-price{{items.id}}"> {{ items.product.product_price }}</span>
-											  <p> <span id="loading" ></span> </p>
+											  <p> <span id="loading{{items.id}}" class="loading_bkg"></span> </p>
 										</p>
 										
 									</form>
@@ -101,30 +101,12 @@
 </div>
 {% for items in cartlist %}
 <script>
-	
-
-	window.onload = subtotal;
-	function subtotal()
-	{
-
-		var item;
-		var items = document.getElementById("cart_items").getElementsByClassName("prod-total");
-		for (var i = 0; i<items.length; i++)
-		{
-			item = items[i];
-			var subtotal = 0;
-			item.getElementById
-			subtotal += parseFloat($(".item-total").text());
-		} 
-		return subtotal;
-	}
-
 	$(document).ready(function(){
 		$(document).on('blur','#qty{{items.id }}', function(){
 		var quantity =parseInt($("#qty{{items.id}}").val());
-		$("#subtotal_value").text(subtotal);
+		//$("#subtotal_value").text(subtotal);
 		$("#qty{{items.id }}").addClass("disabled");
-		$("#loading").addClass("loading");
+		$("#loading{{items.id}}").addClass("loading");
 		req = $.ajax({
 			url:"{{url_for('users.quantity_update',id = items.id)}}",
 			type:"POST",
@@ -132,7 +114,7 @@
 		});
 		//remove loading class here
 		req.done(function(data){
-			$("#loading").removeClass("loading");
+			$("#loading{{items.id}}").removeClass("loading");
 			$("#qty{{items.id }}").removeClass("disabled");
 			//$("#qty{{items.id}}").fadeOut(1000).fadeIn(1000);
 			new_price = $(".item-total{{items.id}}").text(data.item_total).fadeOut(100).fadeIn(1000);

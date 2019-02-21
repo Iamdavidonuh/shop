@@ -3,7 +3,7 @@ from flask import (render_template, request, redirect, url_for, session,
 	flash, Blueprint, jsonify
 	)
 
-from app.models import User, ShippingInfo, Kart,ProductVariations
+from app.models import User, ShippingInfo, Kart,Products
 
 import gc
 
@@ -50,18 +50,17 @@ def cart():
 	form = CartForm()
 	# fetch cart data 
 	cartlist = Kart.query.filter_by(user_id=Kart.user_id)
-	shipping = ShippingInfo.query.all()
-	variants = ProductVariations.query.filter_by(product_id = ProductVariations.product_id)
+	#shipping = ShippingInfo.query.all()
 	price = ShippingPrice()
 	items_subtotals = subtotals() 
 	#for annoymous users
 	if current_user.is_anonymous:
 		flash('please login or register to be able to add a shipping address')			
 		return render_template('users/cart.html', count= count, cartlist= cartlist,
-	title = "Cart", form = form, price=price, variants = variants,items_subtotals=items_subtotals)
+	title = "Cart", form = form, price=price, items_subtotals=items_subtotals)
 	
 	return render_template('users/cart.html', count= count, cartlist= cartlist,
-	title = "Cart", form = form, price=price, variants=variants,items_subtotals=items_subtotals)
+	title = "Cart", form = form, price=price,items_subtotals=items_subtotals)
 
 @users.route('/cart/update/<int:id>',methods = ["POST"])
 def quantity_update(id):
