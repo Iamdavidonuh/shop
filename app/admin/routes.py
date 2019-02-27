@@ -105,10 +105,10 @@ def delete_category(id):
 
 	#redirect to Cateogries page
 	return redirect(url_for('admin.list_categories'))
-
+'''
 	return render_template('admin/categories/category.html',
 	title = "Delete Category")
-
+'''
 @admin.route('/products/')
 @login_required
 def list_products():

@@ -5,7 +5,7 @@ from flask import ( render_template, request, redirect, url_for, session,
 
 from flask_login import current_user, login_required
 
-from app.models import User, Categories, Products,Kart, ProductVariations
+from app.models import User, Categories, Products,Kart
 from app.admin.forms import Variations
 
 home = Blueprint('home', __name__)
@@ -20,13 +20,17 @@ def admin_dashboard():
 	flash("admin dashboard")
 	return render_template('admin/admin_dashboard.html' , title = "Dashboard")
 
+@app.route('/testhome/')
+def testhome():
+	return render_template("xf.html")
+
 @home.route('/')
 def homepage():	
 	categories = Categories.query.all()
 	products = Products.query.all()
-	counter = Kart.query.filter_by(product_id =Kart.product_id).count()
+	count = Kart.query.filter_by(product_id =Kart.product_id).count()
 	return render_template("home/index.html", title = 'Website name',
-	categories = categories, products = products, counter=counter)
+	categories = categories, products = products, count=count)
 
 @home.route('/<int:id>/')
 def shop_by_category(id):
@@ -34,32 +38,36 @@ def shop_by_category(id):
 	category = Categories.query.get_or_404(id)
 	product = Products.query.get(id)
 
-	counter = Kart.query.filter_by(product_id =Kart.product_id).count()
+	count = Kart.query.filter_by(product_id =Kart.product_id).count()
 	return render_template("home/shop_by_category.html", category = category,
-	product = product, title = "Category: "+ category.category_name,counter=counter)
+	product = product, title = "Category: "+ category.category_name,count=count)
 
 
 @home.route('/productdetails/<int:id>/', methods = ["GET","POST"])
 def product_details(id):
-	form = Variations() 
+	form = Variations()
 	product_detail = Products.query.get_or_404(id)
+	
 	user = User.query.get(id)	
-	''' 
-	try pushing the forms to the admin blueprint and try and if error is 
-	same use the populate_obj() func
-	'''
-	counter = Kart.query.filter_by(product_id =Kart.product_id).count()
+	
+	count = Kart.query.filter_by(product_id =Kart.product_id).count()
+	# add to cart
 	if form.validate_on_submit():
-		variants = ProductVariations(product_size = form.sizes.data)
-		cart = Kart(user_id=user.id, product_id=product_detail.id, quantity=1)
-		db.session.add(variants)
+		# annonymous users
+		if current_user.is_anonymous:
+			flash('please login before you can add items to your shopping cart')
+			return redirect(url_for("home.product_details",id = product_detail.id))
+		# authenticated users
+		product_detail.product_size = form.sizes.data
+		cart = Kart(user_id=user.id, product_id=product_detail.id, quantity=1,
+		subtotal = product_detail.product_price)
 		db.session.add(cart)
 		db.session.commit()
-		flash("{} has been added to cart".format(product_detail.product_name))
-		
+
+		flash("{} has been added to cart".format(product_detail.product_name))	
 		return redirect(url_for('home.product_details',id = product_detail.id ))
 	return render_template("home/productdetails.html",
 		product_detail = product_detail,title = product_detail.product_name,
-		form =form,counter=counter)
+		form =form,count=count)
 
 

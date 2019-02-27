@@ -4,18 +4,18 @@
 <head>
     <title> {{ title }} </title>
     
-    
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
-    <link href="{{ url_for('static', filename='css/st.css') }}"rel="stylesheet">
+
     <link href="{{ url_for('static', filename='css/bootstrap.css') }}"rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/st.css') }}"rel="stylesheet">
+    {%block head %}
+    {% endblock %}
 
 
 
 </head>
 <body>
 <header>
-
+<!--
     <script>
     $('#myTabs a').click(function (e) {
 
@@ -23,6 +23,7 @@
         $(this).tab('show')
         })
     </script>
+    -->
 </header>
 
 <div class="container-fluid">
@@ -45,7 +46,7 @@
                 <li><a href="{{ url_for('admin.list_products') }}">Products</a></li>
                 <li><a href="#">Orders</a></li>
             {% else %}
-                <li><a href="{{ url_for('users.cart') }}">Cart <span class="badge">{{ counter }}</span></a></li>
+                <li><a href="{{ url_for('users.cart') }}">Cart <span class="badge">{{ count }}</span></a></li>
             {% endif %}
 
                 <li class="dropdown">
@@ -75,7 +76,8 @@
 		{% with messages = get_flashed_messages() %}
 		  {% if messages %}
 		    {% for message in messages %}
-		<div class="alert alert-info" role="alert" >
+        <div class="alert alert-info" role="alert" style="width:70%;
+        margin-left:auto;margin-right:auto;">        
 			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 		  	<span aria-hidden="true">&times;</span>
 		</button>
@@ -88,19 +90,26 @@
 		{% endwith %}
 
 
-<div class="container-fluid" style="max-width:85%;">
-
+<div class=" container-fluid"style="max-width:85%;" >
+        <script src="{{ url_for('static', filename='js/jquery-3.3.1.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/bootstrap-select.min.js') }}"></script> 
+        <script src="{{ url_for('static', filename='js/countrypicker.js') }}"></script>
 
       {% block body %}
 
 
 
       {% endblock %}
+      <div class="push"></div>
 </div>
+
       <footer style="margin:25px 0px 0px 25px;">
-        <div class="container-fluid">
+        <div class="container">
             <div class="row">
-                                <div class="col l3 s8 m8 ">
+                <!--<div class="col l3 s8 m8 "> -->
+                <div class="col-lg-12">    
                         <ul class="list-inline">
                             <li><a href="{{ url_for('home.homepage') }}">Home</a></li>
                             <li class="footer-menu-divider">⋅</li>
@@ -113,7 +122,7 @@
                             {% endif %}
                         </ul>
                         <p class="copyright text-muted small">Copyright © 2019. All Rights Reserved</p>
-                    </div>
+                </div>
 
 
                     <div class="col l3 s8 m8 ">
@@ -139,5 +148,7 @@
 
         </div>
       </footer>
+
+ 
 </body>
 </html>

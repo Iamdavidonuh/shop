@@ -99,33 +99,20 @@ class Products(db.Model):
 	product_image = db.Column(db.String(120),index=True)
 	product_description = db.Column(db.String(200), index=True)
 	product_stock = db.Column(db.Integer, index = True)
-	#foreign key to categories
+	product_size = db.Column(db.String(5), index = True)
 	categories_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
-	#one to many relationship btwn products and productsvariations
-	variation = db.relationship('ProductVariations', backref='product_variation')
+	
 	'''
 		foreign key for product.id
 		test this weda its one order several products or several orders, serveral products
 		using many to many for now	
 		#many many rel with order
 	'''
+	
 	order = db.relationship("Order", secondary = association_table)
 
 	def __repr__(self):
 		return '<Products {}>'.format(self.product_name)
-
-
-
-''' product variation table for Products (one to many relationship)'''
-class ProductVariations(db.Model):
-	id = db.Column(db.Integer, primary_key=True)
-	product_size = db.Column(db.String(5), index = True)
-	product_color = db.Column(db.String(10), index=True)
-	products_id = db.Column(db.Integer, db.ForeignKey('product.id'))
-
-	def __repr__(self):
-		return '<Variations for {} -- {}>'.format(self.products_id.product_name, self.product_size)
-
 
 
 class Kart(db.Model):
@@ -133,8 +120,9 @@ class Kart(db.Model):
 	product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
 	product = db.relationship('Products', uselist=False)
 	quantity = db.Column(db.Integer)
-	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+	subtotal = db.Column(db.Integer)
 	#user and kart is one to one relationship
+	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 	user = db.relationship('User', uselist=False, backref='user')
 	def __repr__(self):
 		return '<Cart {}>'.format(self.product.product_name)

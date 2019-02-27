@@ -1,45 +1,102 @@
 from app import app
 from flask import (render_template, request, redirect, url_for, session,
-	flash, Blueprint
+	flash, Blueprint, jsonify
 	)
 
-from app.models import User, ShippingInfo, Kart
+from app.models import User, ShippingInfo, Kart,Products
 
 import gc
 
 from flask_login import (current_user, login_user, logout_user, login_required
 	)
-from app.users.forms import ShippingForm,RequestResetForm,ResetPasswordForm
+from app.users.forms import (ShippingForm,RequestResetForm,ResetPasswordForm,
+	CartForm)
 from app import db, mail
 from flask_mail import Message
 
 users = Blueprint('users', __name__)
 
-@users.route('/cart/')
+def ShippingPrice():
+	'''
+	calculate the price of shipping if items is greater than 5 shipping is 2500
+	else 1200
+	'''
+	item_num = Kart.query.filter_by(id = Kart.id).count()
+	shipping_price = 0
+	#item_lists = Kart.query.filter_by(id=Kart.id)
+	if item_num >= 1:
+		shipping_price = 1200
+	elif item_num >= 5:
+		shipping_price = 2500
+	else:
+		pass
+	return shipping_price
+
+'''
+cart variables
+'''
+#items_subtotal=0
+
+def subtotals():
+	items_subtotal = 0
+	get_products = Kart.query.filter_by(subtotal = Kart.subtotal).all()
+	for price in get_products:
+		items_subtotal+=int(price.subtotal)
+	return items_subtotal
+
+@users.route('/cart/',methods = ["GET","POST"])
 def cart():	
-	counter = Kart.query.filter_by(product_id =Kart.product_id).count()
+	count = Kart.query.filter_by(product_id =Kart.product_id).count()
+	form = CartForm()
 	# fetch cart data 
 	cartlist = Kart.query.filter_by(user_id=Kart.user_id)
-	return render_template('users/cart.html', counter = counter, cartlist= cartlist,
-	title = "Cart")
+	#shipping = ShippingInfo.query.all()
+	price = ShippingPrice()
+	items_subtotals = subtotals() 
+	#for annoymous users
+	if current_user.is_anonymous:
+		flash('please login or register to be able to add a shipping address')			
+		return render_template('users/cart.html', count= count, cartlist= cartlist,
+	title = "Cart", form = form, price=price, items_subtotals=items_subtotals)
+	
+	return render_template('users/cart.html', count= count, cartlist= cartlist,
+	title = "Cart", form = form, price=price,items_subtotals=items_subtotals)
+
+@users.route('/cart/update/<int:id>',methods = ["POST"])
+def quantity_update(id):
+	cart_item = Kart.query.get_or_404(id)
+	quantity = request.form["quantity"]
+	cart_item.quantity = quantity
+	item_total = cart_item.product.product_price * int(quantity)
+	cart_item.subtotal = item_total
+	items_subtotal = subtotals()
+	db.session.commit()		
+	return jsonify({"result":"success", "item_total":item_total, "subtotal":items_subtotal})
+
+@users.route('/cart/remove/<int:id>',methods = ["GET","POST"])
+def remove_item(id):
+	cart_item = Kart.query.get_or_404(id)
+	db.session.delete(cart_item)
+	db.session.commit()
+	return redirect(url_for('users.cart'))
 
 
-@users.route('/profile/')
+@users.route('/profile/', methods = ["GET", "POST"])
 def profile():
-	counter = Kart.query.filter_by(product_id =Kart.product_id).count()
+	count = Kart.query.filter_by(product_id =Kart.product_id).count()
 
 	form = ShippingForm()
 	shipping = ShippingInfo.query.all()
 	if form.validate_on_submit():
 		info = ShippingInfo(address1=form.address1.data,address2=form.address2.data,
 		postcode=form.postcode.data,city=form.city.data,
-		state=form.state.data,country=form.country.data)
+		state=form.state.data,country=request.form['country'])
 		db.session.add(info)
 		db.session.commit()
 		flash('shipping information was submitted successfully')
 		return redirect(url_for('users.profile'))
 	return render_template('users/profile.html', title = "Account page",form=form,
-	shipping = shipping, counter=counter)
+	shipping = shipping, count=count)
 
 
 def send_reset_email(user):

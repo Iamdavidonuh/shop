@@ -1,180 +1,134 @@
 {% extends "base.html" %}
 <head>
-  
+	{%block head%}
+	<link href="{{ url_for('static', filename='css/cart.css')}}" rel="stylesheet">
+	{%endblock%}
+
 </head>
 {% block body %}
-<style>
-  .btn-xs
-  {
-    max-height: 22px;
-    max-width: 22px;
-  }
-  .btn-dark
-  {
-    background: #1f1f1f;
-    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.1);
-    color: #fff;
-    text-decoration: none;
-    -webkit-transition: background .1s;
-    transition: background .1s;
+<body>
+		
+<div class="wrapper">
+	<header class="heading cf">
+		<h5>My Cart</h5>
+	</header>
 
-  }
+	<div class="outerbox">
+		<div class="innerbox">
+			<div class="cart-content">
+				<ul class="item-wrapper">
+						{% for items in cartlist %}
+					<li id="cart_items" class="cart-items">
+						<div class="infoWrap">
+							<div class="item-description">
+								<img src="{{ items.product.product_image }}" class="item-img">
+								<h6 class="item-name">
+									{{ items.product.product_name }}	
+									
+										<br>
+									<div class="small">
+										<span>Size:</span> 
+										<span>{{ items.product.product_size }}</span>
+									</div>
+										
+								</h6>
+								<br>
+								<div class="xtra">
+									<form action="{{url_for('users.quantity_update', id=items.id)}}"></form>
+										<p>
+												<input type="text" name="quantity" class="qty" id="qty{{items.id}}", value="{{items.quantity}}">
+											  x <span class="iso">₦</span> <span class="item-price{{items.id}}"> {{ items.product.product_price }}</span>
+											  <p> <span id="loading{{items.id}}" class="loading_bkg"></span> </p>
+										</p>
+										
+									</form>
+									<p class="stockStatus">
+										In Stock
+									</p>
+									
+								</div>
 
-  thead > tr > th, tbody > tr > td
-  {
-    text-align: center;
-  }
-</style>
+							</div>
+							<div class="prod-total item-description">
+								<p> <span class="iso">₦</span> <span class="item-total{{items.id}} item-total">{{items.subtotal}}</span></p>
+							</div>
 
-<div class="container-fluid">
-  <div class="row">
-      <div class="span12" style="max-width: 860px;margin: 0 auto;">
-    <table class="table">
+							<div class="remove-item item-description">
+								<a href="{{ url_for('users.remove_item', id=items.id) }}" class="remove">x</a>	
+							</div>
+						</div>
+					</li>
+					
+                    {% endfor %}
+				</ul>
 
-      <thead>
-          <tr>
-            <th></th>
-            <th>Product</th>
-            <!-- add stock optional -->
-            <th>Unit price</th>
-            <th>Qty </th>
-            <th></th>
-          </tr>
-      </thead>
+			</div>
+		
+				
+		</div>
 
-      <!-- table body -->
-      <tbody>
+		
 
-{% for items in cartlist %}
-    <tr>
-                
-            <td><img width="100" src="assets/img/e.jpg" alt=""></td>
-            <td> <p> {{ items.product.product_name }} </p> </td>
-            <td class="unit-price"> {{ items.product.product_price }} </td>
-        <td>
-            <ul class="center list-inline" >
-                <li><button type="button" class="btn btn-dark btn-xs minus-btn" >-</button></li>
-                <li><input class="center Qty" type="text" size="2" readonly value="1"></li>
-                <li><button type="button" class="btn btn-dark btn-xs plus-btn" >+</button></li>
-              </ul>
-        </td>
-        
-        <td>
-            <span class="iso">₦</span>
-            <span class="prod-price">{{ items.product.product_price }}</span>
-        </td>
-            
-    </tr>
+	</div>
+<footer class="cart-footer">
+	<div class="subtotal cf">
+    <ul>
+	  <li class="totalRow"><span class="label">Subtotal</span>
+		<span class="iso">₦</span>
+		<span id="subtotal_value" class="value">{{items_subtotals}}</span>
+	</li>
+	<li class="totalRow"><span class="label">Shipping</span>
+		<span class="iso">₦</span>
+		<span id="shipping_price" class="value">{{ price }}</span>
+	</li>
 
-          
-{% endfor %}
-
-          <tr>
-              <td colspan="4" class="alignR">
-              <ul class="right list-inline">
-                
-                  <li> Items: </li>
-              </ul>
-              
-              </td>
-              <td class="alignR">
-                  <ul class="list-inline product-costs" >	
-                      <li>$product price * Qty</li> 
-                  </ul>
-    
-                  </td>
-            </tr>
-
-
-            <tr>
-                <td colspan="4" class="alignR">
-                <ul class="right list-inline">
-                      <li>Shipping costs:</li>	
-                    
-                </ul>
-  
-                </td>
-                <td class="alignR">
-                    <ul class="list-inline">	
-                        <li>$Shipping cost</li> 
-                    </ul>
-      
-                    </td>
-              </tr>
-  
-  
-
-
-          <tr>
-              <td colspan="4" class="alignR">
-              <ul class="right list-inline">
-                    <li>Total Price:</li>	
-                  
-              </ul>
-
-              </td>
-              <td class="alignR">
-                  <ul class="list-inline">	
-                      <li>$Items + Shipping</li> 
-                  </ul>
-    
-                  </td>
-            </tr>
-
-
-
-  </tbody>
-  
-      </table><br/>
-
-
-
-
-
-    </table>
+	<li class="totalRow final"><span class="label">Total</span>
+		<span class="iso">₦</span>
+		<span id="total-final" class="value">{{items_subtotals + price}}</span>
+	</li>
+    </ul>
   </div>
-  </div>
+		<div class="checkoutcontainer">
+			<a href="#" id="checkout">
+				<span class="checkout-text">Checkout</span>
+			</a>
+		</div>
+	
+	<span class="cart-copyright">
+		powered by <a href="#" class="authored">buster matthews</a>
+	</span>
+</footer>
 </div>
-
-
-
-
-
-<script type="text/javascript">
-  $('.minus-btn').on('click', function(e) {
-        e.preventDefault();
-        var $this = $(this);
-        var $input = $this.closest('div').find('input');
-        var value = parseInt($input.val());
-
-        if (value > 1) {
-            value = value - 1;
-        } else {
-            value = 0;
-        }
-
-    $input.val(value);
-
-    });
-
-    $('.plus-btn').on('click', function(e) {
-        e.preventDefault();
-        var $this = $(this);
-        var $input = $this.closest('div').find('input');
-        var value = parseInt($input.val());
-
-        if (value < 100) {
-          value = value + 1;
-        } else {
-            value =100;
-        }
-
-        $input.val(value);
-    });
-
-
-
+{% for items in cartlist %}
+<script>
+	$(document).ready(function(){
+		$(document).on('blur','#qty{{items.id }}', function(){
+		var quantity =parseInt($("#qty{{items.id}}").val());
+		//$("#subtotal_value").text(subtotal);
+		$("#qty{{items.id }}").addClass("disabled");
+		$("#loading{{items.id}}").addClass("loading");
+		req = $.ajax({
+			url:"{{url_for('users.quantity_update',id = items.id)}}",
+			type:"POST",
+			data: {quantity:quantity}
+		});
+		//remove loading class here
+		req.done(function(data){
+			$("#loading{{items.id}}").removeClass("loading");
+			$("#qty{{items.id }}").removeClass("disabled");
+			//$("#qty{{items.id}}").fadeOut(1000).fadeIn(1000);
+			new_price = $(".item-total{{items.id}}").text(data.item_total).fadeOut(100).fadeIn(1000);
+			$("#subtotal_value").text(data.subtotal);
+			$("#total-final").text(parseFloat($("#subtotal_value").text()) + parseFloat({{price}}));
+		});
+		
+		
+});
+});
 
 </script>
+{% endfor %}
+</body>
+
 
 {% endblock %}
