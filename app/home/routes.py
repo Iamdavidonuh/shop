@@ -20,6 +20,10 @@ def admin_dashboard():
 	flash("admin dashboard")
 	return render_template('admin/admin_dashboard.html' , title = "Dashboard")
 
+@app.route('/testhome/')
+def testhome():
+	return render_template("xf.html")
+
 @home.route('/')
 def homepage():	
 	categories = Categories.query.all()

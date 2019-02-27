@@ -8,50 +8,121 @@ change cart icon to cart image
 
 ----------------------------------------------
 
-$(function() {
-    var quantity
-    unitPrice = $(".unit-price").text()
-    $('.prod-price').text(unitPrice)
+$('.minus-btn').on('click', function(e) {
+    		e.preventDefault();
+    		var $this = $(this);
+    		var $input = $this.closest('div').find('input');
+    		var value = parseInt($input.val());
 
+    		if (value > 1) {
+    			value = value - 1;
+    		} else {
+    			value = 0;
+    		}
+
+        $input.val(value);
+
+    	});
+
+    	$('.plus-btn').on('click', function(e) {
+    		e.preventDefault();
+    		var $this = $(this);
+    		var $input = $this.closest('div').find('input');
+    		var value = parseInt($input.val());
+
+    		if (value < 100) {
+      		value = value + 1;
+    		} else {
+    			value =100;
+    		}
+
+    		$input.val(value);
+    	});
+
+....................................................................
+
+
+$(document).on('blur','#qty{{items.id }}', function(){
+		var quantity =parseInt($("#qty{{items.id}}").val());
+		//$("#subtotal_value").text(subtotal);
+		$("#qty{{items.id }}").addClass("disabled");
+		$("#loading{{items.id}}").addClass("loading");
+		req = $.ajax({
+			url:"{{url_for('users.quantity_update',id = items.id)}}",
+			type:"POST",
+			data: {quantity:quantity}
+		});
+		//remove loading class here
+		req.done(function(data){
+			$("#loading{{items.id}}").removeClass("loading");
+			$("#qty{{items.id }}").removeClass("disabled");
+			//$("#qty{{items.id}}").fadeOut(1000).fadeIn(1000);
+			new_price = $(".item-total{{items.id}}").text(data.item_total).fadeOut(100).fadeIn(1000);
+			$("#subtotal_value").text(data.subtotal);
+			$("#total-final").text(parseFloat($("#subtotal_value").text()) + parseFloat({{price}}));
+		});
+		
+		
 });
-
-
-
-var Totalprod
-var productPrice
-$(function() {
-    var quantity
-    productPrice = $(".prod-price").text()
-    $(".plus-btn").click(function() {
-        quantity = $('.Qty').val();
-        $(".prod-price").text(productPrice*quantity)
-    });
-
 });
-
-$(function() {
-    var quantity
-    productPrice = $(".prod-price").text()
-    $(".minus-btn").click(function() {
-        quantity = $('.Qty').val();
-        $(".prod-price").text(productPrice*quantity)
-    });
-
-});
+.................................................................
 
 
-	window.onload = subtotal;
-	function subtotal()
-	{
 
-		var item;
-		var items = document.getElementById("cart_items").getElementsByClassName("prod-total");
-		for (var i = 0; i<items.length; i++)
-		{
-			item = items[i];
-			var subtotal = 0;
-			item.getElementById
-			subtotal += parseFloat($(".item-total").text());
-		} 
-		return subtotal;
-	}
+    .wrapper{
+  
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  margin: 0 auto -4em;
+}
+
+.center {
+  margin: auto;
+  width: 50%;
+  padding: 10px;
+}
+
+.content-section {
+  padding: 50px 0;
+  border-top: 1px solid #e7e7e7;
+}
+
+.footer, .push {
+  clear: both;
+  height: 4em;
+}
+.................
+$(document).ready(function(){
+		$('minus-btn{{items.id}}').on('click', function(e){
+			e.preventDefault()
+			var $this = $(this);
+    		var $input = $this.closest('p').find($('#qty{{items.id}}'));
+			var quantity = parseInt($input.val());
+			if (quantity < 20) {
+      		quantity = quantity + 1;
+    		} else {
+    			quantity =20;
+			}
+		$("#qty{{items.id }}").attr("disabled");
+		$("#loading{{items.id}}").addClass("loading");
+		req = $.ajax({
+			url:"{{url_for('users.quantity_update',id = items.id)}}",
+			type:"POST",
+			data: {quantity:quantity}
+		});
+		req.done(function(data){
+			$("#loading{{items.id}}").removeClass("loading");
+			$("#qty{{items.id }}").removeAttr("disabled");
+			//$("#qty{{items.id}}").fadeOut(1000).fadeIn(1000);
+			new_price = $(".item-total{{items.id}}").text(data.item_total).fadeOut(100).fadeIn(1000);
+			$("#subtotal_value").text(data.subtotal);
+			$("#total-final").text(parseFloat($("#subtotal_value").text()) + parseFloat({{price}}));
+		});
+		$input.val(quantity);
+
+
+		});
+
+	});
+		

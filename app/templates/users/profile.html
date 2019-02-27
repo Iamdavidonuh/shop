@@ -93,12 +93,25 @@
 </div>
 </div>
 {% else %}
+<ul>
 {% for info in shipping %}
 
-        shipping data goes in here
+     <li> {{info.address1}}</li>
+     <li>{{info.address2}}</li>
+     <li> {{info.postcode }}</li> 
+     <li>{{info.city}}, {{info.state}}</li>
+     <li>
+                <span class="selectpicker "
+                data-default="{{ info.country }}"
+                data-flag="true">
+                {{ info.country }} 
+                </span>
+             
+        
+</li>
 
 {% endfor %}
-
+</ul>
 {% endif %}
 
 

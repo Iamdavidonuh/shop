@@ -81,7 +81,7 @@ def remove_item(id):
 	return redirect(url_for('users.cart'))
 
 
-@users.route('/profile/')
+@users.route('/profile/', methods = ["GET", "POST"])
 def profile():
 	count = Kart.query.filter_by(product_id =Kart.product_id).count()
 
@@ -90,7 +90,7 @@ def profile():
 	if form.validate_on_submit():
 		info = ShippingInfo(address1=form.address1.data,address2=form.address2.data,
 		postcode=form.postcode.data,city=form.city.data,
-		state=form.state.data,country=request.country.data)
+		state=form.state.data,country=request.form['country'])
 		db.session.add(info)
 		db.session.commit()
 		flash('shipping information was submitted successfully')
