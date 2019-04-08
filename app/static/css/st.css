@@ -1,3 +1,36 @@
+.product-name
+{
+  text-transform: capitalize;
+  font-weight:bold;
+
+}
+.product-description
+{
+  max-width:480px;;
+  min-width: auto;
+  height: auto;
+
+}
+.push
+{
+  height:4em;
+}
+
+.content-section {
+  background: #ffffff;
+  padding: 10px 20px;
+  border: 1px solid #dddddd;
+  border-radius: 3px;
+  margin-bottom: 20px;
+  max-width: 750px;
+  margin-left:auto;
+  margin-right: auto;
+}
+.center {
+  margin: auto;
+  width: 50%;
+  padding: 10px;
+}
 img.responsive-img, video.responsive-video {
     max-width: 100%;
     height: auto;

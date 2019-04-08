@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "xf.html" %}
 
 {% block body %}
 
@@ -38,7 +38,7 @@
 </style>
 
 {% if category.product %}
-<div class="row">
+<div class="row d-block">
         {% for product_list in category.product %}
 	<a href="{{ url_for('home.product_details', id = product_list.id ) }}">
         <div class="col l4 s12 m6" style="width: 25.33333%" >

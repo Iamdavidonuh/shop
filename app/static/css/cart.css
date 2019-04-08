@@ -327,3 +327,10 @@ a.remove:hover {
 {
     background: #fff url('../cart-loader.gif')no-repeat;
 }
+
+#minus-btn,#plus-btn 
+{
+    background-color: black;
+
+}
+

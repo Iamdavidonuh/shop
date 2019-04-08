@@ -36,7 +36,9 @@
 								<div class="xtra">
 									<form action="{{url_for('users.quantity_update', id=items.id)}}"></form>
 										<p>
+											<input id="minus-btn" type="button" class="minus-btn{{items.id}}" value="-">
 												<input type="text" name="quantity" class="qty" id="qty{{items.id}}", value="{{items.quantity}}">
+											<input id="plus-btn" type="button" class="plus-btn{{items.id}}" value="+">	
 											  x <span class="iso">₦</span> <span class="item-price{{items.id}}"> {{ items.product.product_price }}</span>
 											  <p> <span id="loading{{items.id}}" class="loading_bkg"></span> </p>
 										</p>
@@ -102,6 +104,68 @@
 {% for items in cartlist %}
 <script>
 	$(document).ready(function(){
+
+		$('.minus-btn{{items.id}}').on('click', function(e) {
+    		e.preventDefault();
+    		var quantity =parseInt($("#qty{{items.id}}").val());
+    		if (quantity > 1) {
+    			quantity = quantity - 1;
+    		} else {
+    			quantity = 1;
+			}
+			$("#qty{{items.id }}").attr("disabled");
+			$("#loading{{items.id}}").addClass("loading");
+			req = $.ajax({
+			url:"{{url_for('users.quantity_update',id = items.id)}}",
+			type:"POST",
+			data: {quantity:quantity}
+			});
+			req.done(function(data){
+			$("#loading{{items.id}}").removeClass("loading");
+			$("#qty{{items.id }}").removeClass("disabled");
+			//$("#qty{{items.id}}").fadeOut(1000).fadeIn(1000);
+			new_price = $(".item-total{{items.id}}").text(data.item_total).fadeOut(100).fadeIn(1000);
+			$("#subtotal_value").text(data.subtotal);
+			$("#total-final").text(parseFloat($("#subtotal_value").text()) + parseFloat({{price}}));
+		});
+
+		$("#qty{{items.id}}").val(quantity)
+
+		});
+
+		$('.plus-btn{{items.id}}').on('click', function(e){
+			e.preventDefault();
+			var quantity = parseInt($('#qty{{items.id}}').val())
+			if (quantity<20){
+				quantity = quantity +1;
+			}else{
+				quantity = 20;
+
+			}
+			$('#qty{{items.id}}').attr("disabled");
+			$("#loading{{items.id}}").addClass("loading");
+			req = $.ajax({
+			url:"{{url_for('users.quantity_update',id = items.id)}}",
+			type:"POST",
+			data: {quantity:quantity}
+			});
+			req.done(function(data){
+				$("#loading{{items.id}}").removeClass("loading");
+				$("#qty{{items.id }}").removeClass("disabled");
+				//$("#qty{{items.id}}").fadeOut(1000).fadeIn(1000);
+				new_price = $(".item-total{{items.id}}").text(data.item_total).fadeOut(100).fadeIn(1000);
+				$("#subtotal_value").text(data.subtotal);
+				$("#total-final").text(parseFloat($("#subtotal_value").text()) + parseFloat({{price}}));
+			});
+
+			$("#qty{{items.id}}").val(quantity)
+
+
+			});
+
+
+
+
 		$(document).on('blur','#qty{{items.id }}', function(){
 		var quantity =parseInt($("#qty{{items.id}}").val());
 		//$("#subtotal_value").text(subtotal);
@@ -121,9 +185,8 @@
 			$("#subtotal_value").text(data.subtotal);
 			$("#total-final").text(parseFloat($("#subtotal_value").text()) + parseFloat({{price}}));
 		});
-		
-		
-});
+
+		});
 });
 
 </script>
