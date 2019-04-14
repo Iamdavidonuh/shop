@@ -16,6 +16,8 @@ from flask_mail import Message
 
 users = Blueprint('users', __name__)
 
+
+
 def ShippingPrice():
 	'''
 	calculate the price of shipping if items is greater than 5 shipping is 2500
@@ -44,8 +46,9 @@ def subtotals():
 		items_subtotal+=int(price.subtotal)
 	return items_subtotal
 
+
 @users.route('/cart/',methods = ["GET","POST"])
-def cart():	
+def cart():
 	count = Kart.query.filter_by(product_id =Kart.product_id).count()
 	form = CartForm()
 	# fetch cart data 
@@ -62,6 +65,8 @@ def cart():
 	return render_template('users/cart.html', count= count, cartlist= cartlist,
 	title = "Cart", form = form, price=price,items_subtotals=items_subtotals)
 
+
+
 @users.route('/cart/update/<int:id>',methods = ["POST"])
 def quantity_update(id):
 	cart_item = Kart.query.get_or_404(id)
@@ -73,12 +78,17 @@ def quantity_update(id):
 	db.session.commit()		
 	return jsonify({"result":"success", "item_total":item_total, "subtotal":items_subtotal})
 
+
+
 @users.route('/cart/remove/<int:id>',methods = ["GET","POST"])
 def remove_item(id):
 	cart_item = Kart.query.get_or_404(id)
 	db.session.delete(cart_item)
 	db.session.commit()
 	return redirect(url_for('users.cart'))
+
+
+
 
 
 @users.route('/profile/', methods = ["GET", "POST"])

@@ -1,4 +1,5 @@
 import os
+
 # grab the folder of the top-level directory of this project
 basedir = os.path.abspath(os.path.dirname(__file__))
 TOP_LEVEL_DIR = os.path.abspath(os.curdir)
@@ -20,6 +21,8 @@ class Config(object):
     #MAIL_USE_SSL = False
     MAIL_USERNAME = 'doubledeeenterprise@gmail.com'
     MAIL_PASSWORD = 'qwerty990'
+
+    
 
 
 

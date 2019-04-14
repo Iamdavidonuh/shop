@@ -7,8 +7,15 @@ from flask_bootstrap import Bootstrap
 from flask_uploads import configure_uploads,UploadSet,IMAGES
 from flask_mail import Mail
 
+
+stripe_keys = {
+    'secret_key': 'sk_test_oeTw14HnAuwKNWSSpRA5jRNh00jrCoutpu',
+    'publishable_key':'pk_test_PMYmr7zLHh7PM61spR2m1hBY001qeaCAFs'
+		}
+
 app = Flask(__name__)
 app.config.from_object(Config)
+
 
 '''
 creating an object instantiated by uploadedset

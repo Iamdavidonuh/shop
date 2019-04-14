@@ -12,7 +12,6 @@
 	<header class="heading cf">
 		<h5>My Cart</h5>
 	</header>
-
 	<div class="outerbox">
 		<div class="innerbox">
 			<div class="cart-content">
@@ -34,7 +33,7 @@
 								</h6>
 								<br>
 								<div class="xtra">
-									<form action="{{url_for('users.quantity_update', id=items.id)}}"></form>
+									<form action="{{url_for('users.quantity_update', id=items.id)}}">
 										<p>
 											<input id="minus-btn" type="button" class="minus-btn{{items.id}}" value="-">
 												<input type="text" name="quantity" class="qty" id="qty{{items.id}}", value="{{items.quantity}}">
@@ -68,12 +67,14 @@
 		
 				
 		</div>
-
-		
-
 	</div>
 <footer class="cart-footer">
 	<div class="subtotal cf">
+		<script type="text/javascript" src="https://ravesandboxapi.flutterwave.com/flwv3-pug/getpaidx/api/flwpbf-inline.js"></script>
+		<form>
+			<script src="https://api.ravepay.co/flwv3-pug/getpaidx/api/flwpbf-inline.js"></script>
+			<button type="button" onClick="payWithRave()">Pay Now</button>
+		</form>
     <ul>
 	  <li class="totalRow"><span class="label">Subtotal</span>
 		<span class="iso">₦</span>
@@ -90,12 +91,14 @@
 	</li>
     </ul>
   </div>
+
+  <!--
 		<div class="checkoutcontainer">
 			<a href="#" id="checkout">
 				<span class="checkout-text">Checkout</span>
 			</a>
 		</div>
-	
+	-->
 	<span class="cart-copyright">
 		powered by <a href="#" class="authored">buster matthews</a>
 	</span>
@@ -191,7 +194,44 @@
 
 </script>
 {% endfor %}
+
+
+<script>
+    const API_publicKey = "FLWPUBK_TEST-fe0814ab10b8b42b0499ae3ad269ddeb-X";
+
+    function payWithRave() {
+        var x = getpaidSetup({
+            PBFPubKey: API_publicKey,
+            customer_email: "user@example.com",
+            amount: 2000,
+            customer_phone: "234099940409",
+            currency: "NGN",
+            txref: "rave-123456",
+            meta: [{
+                metaname: "flightID",
+                metavalue: "AP1234"
+            }],
+            onclose: function() {},
+            callback: function(response) {
+                var txref = response.tx.txRef; // collect txRef returned and pass to a 					server page to complete status check.
+                console.log("This is the response returned after a charge", response);
+                if (
+                    response.tx.chargeResponseCode == "00" ||
+                    response.tx.chargeResponseCode == "0"
+                ) {
+                    // redirect to a success page
+                } else {
+                    // redirect to a failure page.
+                }
+
+                x.close(); // use this to close the modal immediately after payment.
+            }
+        });
+    }
+</script>
+
 </body>
+
 
 
 {% endblock %}

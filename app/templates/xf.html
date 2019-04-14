@@ -53,7 +53,7 @@
                                 {% else %}  
                                     
                                     <li class="nav-item">
-                                      <a class="nav-link active" href="{{ url_for('users.cart') }}">Cart <span class="badge badge-light">0</span></a>
+                                      <a class="nav-link active" href="{{ url_for('users.cart') }}">Cart<span class="badge badge-light">{{ count }}</span></a>
                                     </li>
                                     <li class="nav-item">
                                       <a class="nav-link active" href="{{ url_for('auth.register') }}">Register</a>
