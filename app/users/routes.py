@@ -21,11 +21,14 @@ def ShippingPrice():
 	calculate the price of shipping if items is greater than 5 shipping is 2500
 	else 1200
 	'''
-	#check this otherwise revert to 
-	item_num = Kart.query.filter_by(id = Kart.id).count()
-	#item_num = Kart.query.filter_by(user_id = current_user.id).count()
+	if current_user.is_authenticated:
+		#check this otherwise revert to 
+		#item_num = Kart.query.filter_by(user_id = Kart.user_id).count()
+		item_num = Kart.query.filter_by(user_id = current_user.id).count()
+	else:
+		item_num = Kart.query.filter_by(user_id = 0).count()
+	
 	shipping_price = 0
-	#item_lists = Kart.query.filter_by(id=Kart.id)
 	if item_num >= 1:
 		shipping_price = 1200
 	elif item_num >= 5:
@@ -34,15 +37,17 @@ def ShippingPrice():
 		pass
 	return shipping_price
 
-'''
-cart variables
-'''
-#items_subtotal=0
-
 def subtotals():
+	if current_user.is_authenticated:
+		#check this otherwise revert to 
+		#item_num = Kart.query.filter_by(user_id = Kart.user_id).count()
+		get_products = Kart.query.filter_by(user_id = current_user.id).all()
+	else:
+		get_products = Kart.query.filter_by(user_id = 0).all()
+	
 	items_subtotal = 0
-	get_products = Kart.query.filter_by(user_id = Kart.user_id).all() 
-	#Kart.query.filter_by(user_id = current_user.id).all()
+	#get_products = Kart.query.filter_by(user_id = Kart.user_id).all() 
+	
 	for price in get_products:
 		items_subtotal+=int(price.subtotal)
 	return items_subtotal
@@ -54,8 +59,8 @@ def cart():
 		user = 0 
 		cartlist = []
 	else:
-		count = Kart.query.filter_by(user_id =Kart.user_id).count()
-		user = current_user.id 
+		user = current_user.id
+		count = Kart.query.filter_by(user_id =user).count() 
 		cartlist = Kart.query.filter_by(user_id=user).all()
 	
 	form = CartForm()
@@ -94,7 +99,13 @@ def remove_item(id):
 
 @users.route('/profile/', methods = ["GET", "POST"])
 def profile():
-	count = Kart.query.filter_by(user_id = current_user.id).count()
+	if current_user.is_anonymous:
+		count = 0
+		user = 0 
+		
+	else:
+		user = current_user.id
+		count = Kart.query.filter_by(user_id =user).count()
 
 	form = ShippingForm()
 	shipping = ShippingInfo.query.all()

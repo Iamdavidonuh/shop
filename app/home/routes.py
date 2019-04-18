@@ -29,7 +29,7 @@ def homepage():
 	if current_user.is_anonymous:
 		count = 0
 	else:
-		count = Kart.query.filter_by(user_id =Kart.user_id).count()
+		count = Kart.query.filter_by(user_id =current_user.id).count()
 	return render_template("home/index.html", title = 'Website name',
 	categories = categories, products = products, count=count)
 
@@ -39,7 +39,7 @@ def shop_by_category(id):
 
 		count = 0
 	else:
-		count = Kart.query.filter_by(user_id =Kart.user_id).count()
+		count = Kart.query.filter_by(user_id =current_user.id).count()
 
 	category = Categories.query.get_or_404(id)
 	product = Products.query.get(id)
@@ -52,7 +52,7 @@ def product_details(id):
 	if current_user.is_anonymous:
 		count = 0
 	else:
-		count = Kart.query.filter_by(user_id =Kart.user_id).count()
+		count = Kart.query.filter_by(user_id =current_user.id).count()
 
 	form = Variations()
 	product_detail = Products.query.get_or_404(id)
