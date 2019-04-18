@@ -53,11 +53,11 @@ def product_details(id):
 		count = 0
 	else:
 		count = Kart.query.filter_by(user_id =current_user.id).count()
-
+		user =current_user.id
 	form = Variations()
 	product_detail = Products.query.get_or_404(id)
 	 
-	user =current_user.id	
+		
 	# add to cart
 	if form.validate_on_submit():
 		# annonymous users

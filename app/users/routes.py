@@ -56,10 +56,6 @@ def subtotals():
 
 
 @users.route('/cart/',methods = ["GET","POST"])
-<<<<<<< HEAD
-def cart():
-	count = Kart.query.filter_by(product_id =Kart.product_id).count()
-=======
 def cart():	
 	if current_user.is_anonymous:
 		count = 0
@@ -70,7 +66,6 @@ def cart():
 		count = Kart.query.filter_by(user_id =user).count() 
 		cartlist = Kart.query.filter_by(user_id=user).all()
 	
->>>>>>> Templates
 	form = CartForm()
 	# fetch cart data 
 	
