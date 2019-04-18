@@ -22,32 +22,42 @@ def admin_dashboard():
 
 
 @home.route('/')
-def homepage():	
+def homepage():
+		
 	categories = Categories.query.all()
 	products = Products.query.all()
-	count = Kart.query.filter_by(product_id =Kart.product_id).count()
+	if current_user.is_anonymous:
+		count = 0
+	else:
+		count = Kart.query.filter_by(user_id =current_user.id).count()
 	return render_template("home/index.html", title = 'Website name',
 	categories = categories, products = products, count=count)
 
 @home.route('/<int:id>/')
 def shop_by_category(id):
+	if current_user.is_anonymous:
+
+		count = 0
+	else:
+		count = Kart.query.filter_by(user_id =current_user.id).count()
 
 	category = Categories.query.get_or_404(id)
 	product = Products.query.get(id)
-
-	count = Kart.query.filter_by(product_id =Kart.product_id).count()
 	return render_template("home/shop_by_category.html", category = category,
 	product = product, title = "Category: "+ category.category_name,count=count)
 
 
 @home.route('/productdetails/<int:id>/', methods = ["GET","POST"])
 def product_details(id):
+	if current_user.is_anonymous:
+		count = 0
+	else:
+		count = Kart.query.filter_by(user_id =current_user.id).count()
+
 	form = Variations()
 	product_detail = Products.query.get_or_404(id)
-	
-	user = User.query.get(id)	
-	
-	count = Kart.query.filter_by(product_id =Kart.product_id).count()
+	 
+	user =current_user.id	
 	# add to cart
 	if form.validate_on_submit():
 		# annonymous users
@@ -56,7 +66,7 @@ def product_details(id):
 			return redirect(url_for("home.product_details",id = product_detail.id))
 		# authenticated users
 		product_detail.product_size = form.sizes.data
-		cart = Kart(user_id=user.id, product_id=product_detail.id, quantity=1,
+		cart = Kart(user_id=user, product_id=product_detail.id, quantity=1,
 		subtotal = product_detail.product_price)
 		db.session.add(cart)
 		db.session.commit()
