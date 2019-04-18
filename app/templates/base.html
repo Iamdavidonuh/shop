@@ -1,154 +1,151 @@
+<html>
+    <head>
+        <title>
+            test
+        </title>
+        <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}"rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/st.css') }}"rel="stylesheet">
+        {%block head%}
+        {%endblock%}
+       
+    </head>
+    <body>
+            <div class="container-fluid mt-1 mb-3">
+                <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">Navbar</a>
+                
+                    <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+                    <ul class="navbar-nav mr-auto mt-2 mt-lg-0 ">
+                        <li class="nav-item active">
+                        <a class="nav-link" href="{{ url_for('home.homepage') }}">Home <span class="sr-only">(current)</span></a>
+                        </li>     
+                    </ul>
+                    <ul class="navbar-nav ml-auto mr-5 mt-2 mt-lg-0">
+                            {% if current_user.is_authenticated %}
+                            {% if current_user.is_admin %}  
+                            <li class="nav-item">
+                              <a class="nav-link active" href="{{ url_for('home.admin_dashboard') }}">Dashboard</a>
+                            </li>
+                            <li class="nav-item">
+                              <a class="nav-link" href="{{ url_for('admin.list_categories') }}">Categories</a>
+                            </li>
+                            <li class="nav-item">
+                              <a class="nav-link" href="{{ url_for('admin.list_products') }}">Products</a>
+                            </li>
+                            <li class="nav-item">
+                              <a class="nav-link" href="#" >Orders</a>
+                            </li>
+                            {% else %}
+                                    
+                              <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('users.cart') }}">Cart<span class="badge badge-light">{{ count }}</span></a>
+                              </li>
+                              {% endif %}
+                              <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                                        Hi, {{ current_user.firstname }}!</a>
+                                    <div class="dropdown-menu">
+                                      <a class="dropdown-item" href="{{ url_for('users.profile') }}">Profile</a>
+                                      <div class="dropdown-divider"></div>
+                                      <a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a>
+                                    </div>
+                                  </li>
+                                {% else %}  
+                                    
+                                    <li class="nav-item">
+                                      <a class="nav-link active" href="{{ url_for('users.cart') }}">Cart<span class="badge badge-light">{{ count }}</span></a>
+                                    </li>
+                                    <li class="nav-item">
+                                      <a class="nav-link active" href="{{ url_for('auth.register') }}">Register</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link active" href="{{ url_for('auth.login') }}">Login</a>
+                                      </li>
+                                      
+                                    {% endif %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title> {{ title }} </title>
-    
-
-    <link href="{{ url_for('static', filename='css/bootstrap.css') }}"rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/st.css') }}"rel="stylesheet">
-    {%block head %}
-    {% endblock %}
-
-
-
-</head>
-<body>
-<header>
-<!--
-    <script>
-    $('#myTabs a').click(function (e) {
-
-        e.preventDefault()
-        $(this).tab('show')
-        })
-    </script>
-    -->
-</header>
-
-<div class="container-fluid">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-
-          <a class="navbar-brand" href="{{ url_for('home.homepage') }}">FashionWeek</a>
-        </div>
-        <ul class="nav navbar-nav navbar-right" style="margin-right:20px;">
-            {% if current_user.is_authenticated %}
-            {% if current_user.is_admin %}
-                <li><a href="{{ url_for('home.admin_dashboard') }}">Dashboard</a></li>
-                <li><a href="{{ url_for('admin.list_categories') }}">Categories</a></li>
-                <li><a href="{{ url_for('admin.list_products') }}">Products</a></li>
-                <li><a href="#">Orders</a></li>
-            {% else %}
-                <li><a href="{{ url_for('users.cart') }}">Cart <span class="badge">{{ count }}</span></a></li>
-            {% endif %}
-
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                        <i class="fa fa-user"></i>  Hi, {{ current_user.firstname }}!
-                        <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a href="{{ url_for('users.profile') }}">Profile</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
                     </ul>
 
-            {% else %}                
-                <li><a href="{{ url_for('home.homepage') }}">Home</a></li>
-                <li><a href="{{ url_for('users.cart') }}">Cart <span class="badge">{{ count }}</span></a></li>
-                <li><a href="{{ url_for('auth.register') }}">Register</a></li>
-                <li><a href="{{ url_for('auth.login') }}">Login</a></li>
-                
-            {% endif %}
-        
-        </ul>
-</div>
 
-
-
-		{% with messages = get_flashed_messages() %}
-		  {% if messages %}
-		    {% for message in messages %}
-        <div class="alert alert-info" role="alert" style="width:70%;
-        margin-left:auto;margin-right:auto;">        
-			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-		  	<span aria-hidden="true">&times;</span>
-		</button>
-			{{ message }}
-		</div>
-		{% endfor %}
-
-
-		{% endif %}
-		{% endwith %}
-
-
-<div class=" container-fluid"style="max-width:85%;" >
-        <script src="{{ url_for('static', filename='js/jquery-3.3.1.js') }}"></script>
-        <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
-        <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
-        <script src="{{ url_for('static', filename='js/bootstrap-select.min.js') }}"></script> 
-        <script src="{{ url_for('static', filename='js/countrypicker.js') }}"></script>
-
-      {% block body %}
-
-
-
-      {% endblock %}
-      <div class="push"></div>
-</div>
-
-      <footer style="margin:25px 0px 0px 25px;">
-        <div class="container">
-            <div class="row">
-                <!--<div class="col l3 s8 m8 "> -->
-                <div class="col-lg-12">    
-                        <ul class="list-inline">
-                            <li><a href="{{ url_for('home.homepage') }}">Home</a></li>
-                            <li class="footer-menu-divider">⋅</li>
-                            {% if current_user.is_authenticated %}
-                                <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
-                            {% else %}
-                                <li><a href="{{ url_for('auth.register') }}">Register</a></li>
-                                <li class="footer-menu-divider">⋅</li>
-                                <li><a href="{{ url_for('auth.login') }}">Login</a></li>
-                            {% endif %}
-                        </ul>
-                        <p class="copyright text-muted small">Copyright © 2019. All Rights Reserved</p>
-                </div>
-
-
-                    <div class="col l3 s8 m8 ">
-                            <ul class="list-inline">
-                             <li>add details in the footer</li>
-                             <li>social media</li>    
-                            </ul>
-                            <p class="copyright text-muted small">Copyright © 2019. All Rights Reserved</p>
-                        </div>
-
-                        <div class="col l3 s8 m8 ">
-                                <ul class="list-inline">
-                                <li>sitemap etc</li>    
-                                </ul>
-                                <p class="copyright text-muted small">Copyright © 2019. All Rights Reserved</p>
-                            </div>
-    
-
-
-
+                    </div>
+                </nav>
             </div>
 
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-info alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                        
+                      </div>
+                       
+                    {% endfor %}
+  
+  
+                {% endif %}
+            {% endwith %}
+    <div class=" container">
+        <script src="{{ url_for('static', filename='js/countrypicker.js') }}"></script>
 
-        </div>
-      </footer>
+            {% block body %}
 
- 
-</body>
+
+
+            {% endblock %}
+    </div>
+    
+    <div class="push"></div>
+    <div class="container-fluid">
+        <footer>
+                                    
+                <div class="row">
+                        <!--<div class="col l3 s8 m8 "> -->
+                        <div class="col">    
+                                <ul class="nav">
+                                    <li class=" nav-item" ><a class="nav-link" href="{{ url_for('home.homepage') }}">Home</a></li>
+                                    <li class="footer-menu-divider mt-2">⋅</li>
+                                    {% if current_user.is_authenticated %}
+                                        <li class=" nav-item" ><a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a></li>
+                                    {% else %}
+                                        <li class=" nav-item" ><a class="nav-link" href="{{ url_for('auth.register') }}">Register</a></li>
+                                        <li class="footer-menu-divider mt-2">⋅</li>
+                                        <li class=" nav-item" ><a class="nav-link" href="{{ url_for('auth.login') }}">Login</a></li>
+                                    {% endif %}
+                                </ul>
+                                <p class="copyright text-muted small">Copyright © 2019. All Rights Reserved</p>
+                        </div>
+                        
+
+                        
+                        <div class="col">
+                                <ul class="d-inline-block">
+                                 <li class="d-inline-block">add details in the footer</li>
+                                 <li class="d-inline-block">social media</li>    
+                                </ul>
+                        </div>
+                        
+                        <div class="col">
+                            <ul class="nav">
+                            <li class="d-inline-block"><a class="nav-link" href="#">sitemap etc</a></li>    
+                            </ul>
+                        </div>
+                     
+        
+    
+                </div>
+                </ul>
+                
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/jquery-3.3.1.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
+    </body>
 </html>
