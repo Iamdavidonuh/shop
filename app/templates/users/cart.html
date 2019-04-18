@@ -12,7 +12,7 @@
 	<header class="heading cf">
 		<h5>My Cart</h5>
 	</header>
-
+	{% if current_user.is_authenticated %}
 	<div class="outerbox">
 		<div class="innerbox">
 			<div class="cart-content">
@@ -47,6 +47,7 @@
 									<p class="stockStatus">
 										In Stock
 									</p>
+									{{ items.user_id }}
 									
 								</div>
 
@@ -54,6 +55,7 @@
 							<div class="prod-total item-description">
 								<p> <span class="iso">₦</span> <span class="item-total{{items.id}} item-total">{{items.subtotal}}</span></p>
 							</div>
+
 
 							<div class="remove-item item-description">
 								<a href="{{ url_for('users.remove_item', id=items.id) }}" class="remove">x</a>	
@@ -191,6 +193,68 @@
 
 </script>
 {% endfor %}
+{% else %}
+<div class="outerbox">
+	<div class="innerbox">
+		<div class="cart-content">
+			<ul class="item-wrapper">
+				<li id="cart_items" class="cart-items">
+					<div class="infoWrap">
+						<div class="item-description">
+							
+
+						</div>
+						<div class="prod-total item-description">
+						</div>
+
+
+						<div class="remove-item item-description">	
+						</div>
+					</div>
+				</li>
+				
+			</ul>
+
+		</div>
+	
+			
+	</div>
+
+	
+
+</div>
+<footer class="cart-footer">
+<div class="subtotal cf">
+<ul>
+  <li class="totalRow"><span class="label">Subtotal</span>
+	<span class="iso">₦</span>
+	<span id="subtotal_value" class="value">0</span>
+</li>
+<li class="totalRow"><span class="label">Shipping</span>
+	<span class="iso">₦</span>
+	<span id="shipping_price" class="value">0</span>
+</li>
+
+<li class="totalRow final"><span class="label">Total</span>
+	<span class="iso">₦</span>
+	<span id="total-final" class="value">0</span>
+</li>
+</ul>
+</div>
+	<div class="checkoutcontainer">
+		<a href="#" id="checkout">
+			<span class="checkout-text">Checkout</span>
+		</a>
+	</div>
+
+<span class="cart-copyright">
+	powered by <a href="#" class="authored">buster matthews</a>
+</span>
+</footer>
+</div>
+
+{% endif %}
+
 </body>
 
 

@@ -21,7 +21,9 @@ def ShippingPrice():
 	calculate the price of shipping if items is greater than 5 shipping is 2500
 	else 1200
 	'''
+	#check this otherwise revert to 
 	item_num = Kart.query.filter_by(id = Kart.id).count()
+	#item_num = Kart.query.filter_by(user_id = current_user.id).count()
 	shipping_price = 0
 	#item_lists = Kart.query.filter_by(id=Kart.id)
 	if item_num >= 1:
@@ -39,17 +41,26 @@ cart variables
 
 def subtotals():
 	items_subtotal = 0
-	get_products = Kart.query.filter_by(subtotal = Kart.subtotal).all()
+	get_products = Kart.query.filter_by(user_id = Kart.user_id).all() 
+	#Kart.query.filter_by(user_id = current_user.id).all()
 	for price in get_products:
 		items_subtotal+=int(price.subtotal)
 	return items_subtotal
 
 @users.route('/cart/',methods = ["GET","POST"])
 def cart():	
-	count = Kart.query.filter_by(product_id =Kart.product_id).count()
+	if current_user.is_anonymous:
+		count = 0
+		user = 0 
+		cartlist = []
+	else:
+		count = Kart.query.filter_by(user_id =Kart.user_id).count()
+		user = current_user.id 
+		cartlist = Kart.query.filter_by(user_id=user).all()
+	
 	form = CartForm()
 	# fetch cart data 
-	cartlist = Kart.query.filter_by(user_id=Kart.user_id)
+	
 	#shipping = ShippingInfo.query.all()
 	price = ShippingPrice()
 	items_subtotals = subtotals() 
@@ -83,7 +94,7 @@ def remove_item(id):
 
 @users.route('/profile/', methods = ["GET", "POST"])
 def profile():
-	count = Kart.query.filter_by(product_id =Kart.product_id).count()
+	count = Kart.query.filter_by(user_id = current_user.id).count()
 
 	form = ShippingForm()
 	shipping = ShippingInfo.query.all()
