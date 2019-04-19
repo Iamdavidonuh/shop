@@ -20,6 +20,9 @@ def admin_dashboard():
 	flash("admin dashboard")
 	return render_template('admin/admin_dashboard.html' , title = "Dashboard")
 
+@home.route('/land')
+def landing():
+	return render_template('home/home.html')
 
 @home.route('/')
 def homepage():

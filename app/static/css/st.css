@@ -1,3 +1,27 @@
+
+.brand_name .navbar-brand {
+	font-size:1.59rem;
+   text-transform: uppercase;
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    color: #333;
+}
+.brand_name >.navbar-brand{
+	
+  color:#01CFCF;
+  
+text-decoration: none;
+
+}
+.brand_name >.navbar-brand span{
+  color: #000;
+font-weight: 300;
+}
+.brand_name >.navbar-brand:hover{
+	
+  color:#01CFCF;
+
+}
 .product-name
 {
   text-transform: capitalize;
