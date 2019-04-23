@@ -72,11 +72,7 @@
 	</div>
 <footer class="cart-footer">
 	<div class="subtotal cf">
-		<script type="text/javascript" src="https://ravesandboxapi.flutterwave.com/flwv3-pug/getpaidx/api/flwpbf-inline.js"></script>
-		<form>
-			<script src="https://api.ravepay.co/flwv3-pug/getpaidx/api/flwpbf-inline.js"></script>
-			<button type="button" onClick="payWithRave()">Pay Now</button>
-		</form>
+		
     <ul>
 	  <li class="totalRow"><span class="label">Subtotal</span>
 		<span class="iso">₦</span>
@@ -94,13 +90,40 @@
     </ul>
   </div>
 
-  <!--
+  
 		<div class="checkoutcontainer">
-			<a href="#" id="checkout">
+			<a href="#" id="checkout" data-toggle="modal" data-target="#exampleModalCenter">
 				<span class="checkout-text">Checkout</span>
 			</a>
 		</div>
-	-->
+			<!-- Modal -->
+			<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalCenterTitle">Select Payment Method</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+						<div class="row">
+								<div class="col-md-4">
+										<script type="text/javascript" src="https://ravesandboxapi.flutterwave.com/flwv3-pug/getpaidx/api/flwpbf-inline.js"></script>
+										<form method="POST" action="{{ url_for('users.verify')}}">
+											<script src="https://api.ravepay.co/flwv3-pug/getpaidx/api/flwpbf-inline.js"></script>
+											<button type="button" onClick="payWithRave()">Pay Now</button>
+										</form>
+								</div>
+								<div class="col-md-4">other payment method</div>
+							  </div>
+						
+				</div>
+				
+				</div>
+			</div>
+			</div>
+	
 	<span class="cart-copyright">
 		powered by <a href="#" class="authored">buster matthews</a>
 	</span>
@@ -217,13 +240,16 @@
             callback: function(response) {
                 var txref = response.tx.txRef; // collect txRef returned and pass to a 					server page to complete status check.
                 console.log("This is the response returned after a charge", response);
+				
                 if (
                     response.tx.chargeResponseCode == "00" ||
                     response.tx.chargeResponseCode == "0"
                 ) {
                     // redirect to a success page
+					window.location = "{{url_for('users.verify')}}"; //Add your success page here
                 } else {
                     // redirect to a failure page.
+					window.location = "{{url_for('users.failed')}}";
                 }
 
                 x.close(); // use this to close the modal immediately after payment.

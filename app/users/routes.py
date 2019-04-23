@@ -13,7 +13,7 @@ from app.users.forms import (ShippingForm,RequestResetForm,ResetPasswordForm,
 	CartForm)
 from app import db, mail
 from flask_mail import Message
-
+from rave_python import Rave,RaveExceptions, Misc
 users = Blueprint('users', __name__)
 
 
@@ -54,7 +54,6 @@ def subtotals():
 		items_subtotal+=int(price.subtotal)
 	return items_subtotal
 
-
 @users.route('/cart/',methods = ["GET","POST"])
 def cart():	
 	if current_user.is_anonymous:
@@ -76,7 +75,7 @@ def cart():
 	if current_user.is_anonymous:
 		flash('please login or register to be able to add a shipping address')			
 		return render_template('users/cart.html', count= count, cartlist= cartlist,
-	title = "Cart", form = form, price=price, items_subtotals=items_subtotals)
+	title = "Cart", form = form, price=price, items_subtotals=items_subtotals,ref=ref)
 	
 	return render_template('users/cart.html', count= count, cartlist= cartlist,
 	title = "Cart", form = form, price=price,items_subtotals=items_subtotals)
@@ -103,10 +102,21 @@ def remove_item(id):
 	db.session.commit()
 	return redirect(url_for('users.cart'))
 
+@login_required
+@users.route('/verify_payment',methods = ["GET","POST"])
+def verify():
+	rave = Rave("FLWPUBK_TEST-fe0814ab10b8b42b0499ae3ad269ddeb-X",\
+	 "FLWSECK_TEST-fc795104317df61f3113733061831a44-X", usingEnv = False)
+	res = request.args.get('status')
+	if res == 'successful':
+		return render_template('users/charge.html')
+	elif res != 'successful':
+		return "Unsuccessful"
+	return render_template('users/charge.html')
 
-
-
-
+@users.route('/failure')
+def failed():
+	print('Transaction Failed contact your bank')
 @users.route('/profile/', methods = ["GET", "POST"])
 def profile():
 	if current_user.is_anonymous:
