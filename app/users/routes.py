@@ -13,7 +13,7 @@ from app.users.forms import (ShippingForm,RequestResetForm,ResetPasswordForm,
 	CartForm)
 from app import db, mail
 from flask_mail import Message
-
+#from rave_python import Rave,RaveExceptions, Misc
 users = Blueprint('users', __name__)
 
 
@@ -53,7 +53,6 @@ def subtotals():
 	for price in get_products:
 		items_subtotal+=int(price.subtotal)
 	return items_subtotal
-
 
 @users.route('/cart/',methods = ["GET","POST"])
 def cart():	
@@ -103,10 +102,14 @@ def remove_item(id):
 	db.session.commit()
 	return redirect(url_for('users.cart'))
 
+@login_required
+@users.route('/verify_payment',methods = ["GET","POST"])
+def verify():
+	return render_template('users/charge.html')
 
-
-
-
+@users.route('/failure')
+def failed():
+	print('Transaction Failed contact your bank')
 @users.route('/profile/', methods = ["GET", "POST"])
 def profile():
 	if current_user.is_anonymous:
