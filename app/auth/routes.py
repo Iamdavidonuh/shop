@@ -36,7 +36,7 @@ def register():
 			db.session.add(user)
 			db.session.commit()
 			gc.collect()
-			flash("Congratulations, Registration was successful")
+			flash("Congratulations, Registration was successful",'success')
 			return redirect(url_for('auth.login'))
 		return render_template('register.html', form = form, error= error, title = 'Register')
 	except Exception as e:
@@ -49,16 +49,16 @@ def login():
 	error = ' '
 	try:
 		if current_user.is_authenticated:
-			flash("you are already logged in")
+			flash("you are already logged in",'info')
 			return redirect(url_for('home.homepage'))
 		if form.validate_on_submit():
 			
 			user = User.query.filter_by(email=form.email.data).first()
 			if user is None or not user.check_password(form.password.data):
-				flash('Invalid username or password')
+				flash('Invalid username or password','warning')
 				return redirect(url_for('auth.login', form = form, title = "Login to your account"))
 			login_user(user)
-			flash("you have been successfully logged in")
+			flash("you have been successfully logged in",'success')
 			gc.collect()
 			
 			#check if user is an admin or not and login to the appropriate place

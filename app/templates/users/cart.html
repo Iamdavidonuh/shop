@@ -110,9 +110,9 @@
 						<div class="row">
 								<div class="col-md-4">
 										<script type="text/javascript" src="https://ravesandboxapi.flutterwave.com/flwv3-pug/getpaidx/api/flwpbf-inline.js"></script>
-										<form method="POST" action="{{ url_for('users.verify')}}">
+										<form method="POST">
 											<script src="https://api.ravepay.co/flwv3-pug/getpaidx/api/flwpbf-inline.js"></script>
-											<button type="button" onClick="payWithRave()">Pay Now</button>
+											<button type="button" onClick="payWithRave()" class="btn btn-outline-success">Ravepay</button>
 										</form>
 								</div>
 								<div class="col-md-4">other payment method</div>
@@ -232,15 +232,11 @@
     function payWithRave() {
         var x = getpaidSetup({
             PBFPubKey: API_publicKey,
-            customer_email: "user@example.com",
+            customer_email: "{{current_user.email }}",
             amount: {{items_subtotals + price}},
-            customer_phone: "234099940409",
+            customer_phone: "{{current_user.phonenumber }}",
             currency: "NGN",
             txref: "rave-123456",
-            meta: [{
-                metaname: "flightID",
-                metavalue: "AP1234"
-            }],
             onclose: function() {},
             callback: function(response) {
                 var txref = response.tx.txRef; // collect txRef returned and pass to a 					server page to complete status check.
@@ -250,8 +246,9 @@
                     response.tx.chargeResponseCode == "00" ||
                     response.tx.chargeResponseCode == "0"
                 ) {
+					
                     // redirect to a success page
-					window.location = "{{url_for('users.verify')}}"; //Add your success page here
+					window.location = "{{url_for('users.success')}}"; //Add your success page here
                 } else {
                     // redirect to a failure page.
 					window.location = "{{url_for('users.failed')}}";

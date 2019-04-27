@@ -102,14 +102,29 @@ def remove_item(id):
 	db.session.commit()
 	return redirect(url_for('users.cart'))
 
+def send_success_mail(user):
+	msg = Message('Item(s) Purchased', sender='noreply@demo.com',
+	recipients=[user.email])
+	msg.body = f'''You have successfully purchased items from our store.
+These items will be shipped withing 48hours, Thank you.
+If you did not make this request simply ignore this request and no changes will be made.
+'''
+	mail.send(msg)
+
 @login_required
-@users.route('/verify_payment',methods = ["GET","POST"])
-def verify():
+@users.route('/success',methods = ["GET"])
+def success():
+	flash('Transaction successful', 'success')
+	if request.method == "GET":
+		user = current_user.email
+		send_success_mail(user)
 	return render_template('users/charge.html')
 
 @users.route('/failure')
 def failed():
-	print('Transaction Failed contact your bank')
+	flash('transaction Failed', 'danger')
+	return render_template('users/failed.html')
+
 @users.route('/profile/', methods = ["GET", "POST"])
 def profile():
 	if current_user.is_anonymous:
@@ -128,7 +143,7 @@ def profile():
 		state=form.state.data,country=request.form['country'])
 		db.session.add(info)
 		db.session.commit()
-		flash('shipping information was submitted successfully')
+		flash('shipping information was submitted successfully','success')
 		return redirect(url_for('users.profile'))
 	return render_template('users/profile.html', title = "Account page",form=form,
 	shipping = shipping, count=count)

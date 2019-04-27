@@ -75,7 +75,7 @@ def product_details(id):
 	if form.validate_on_submit():
 		# annonymous users
 		if current_user.is_anonymous:
-			flash('please login before you can add items to your shopping cart')
+			flash('please login before you can add items to your shopping cart','warning')
 			return redirect(url_for("home.product_details",id = product_detail.id))
 		# authenticated users
 		product_detail.product_size = form.sizes.data
