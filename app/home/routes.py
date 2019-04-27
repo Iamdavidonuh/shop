@@ -7,7 +7,7 @@ from flask_login import current_user, login_required
 
 from app.models import User, Categories, Products,Kart
 from app.admin.forms import Variations
-
+import random
 home = Blueprint('home', __name__)
 
 
@@ -20,15 +20,25 @@ def admin_dashboard():
 	flash("admin dashboard")
 	return render_template('admin/admin_dashboard.html' , title = "Dashboard")
 
-@home.route('/land')
-def landing():
-	return render_template('home/home.html')
-
 @home.route('/')
-def homepage():
-		
+def landing():
+	ids = []
+	c = Products.query.all()
+	for s in c:
+		ids.append(s.id)
+	sorter = []
+	for i in range(3):
+		random.randint(1,1000)
+		if i in ids:
+			sorter.append(i)
+	products = Products.query.all()
+	return render_template('head.html', products = products, sorter = sorter)
+
+@home.route('/home')
+def homepage():		
 	categories = Categories.query.all()
 	products = Products.query.all()
+
 	if current_user.is_anonymous:
 		count = 0
 	else:

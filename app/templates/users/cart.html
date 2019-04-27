@@ -198,16 +198,23 @@
 		var quantity =parseInt($("#qty{{items.id}}").val());
 		//$("#subtotal_value").text(subtotal);
 		$("#qty{{items.id }}").addClass("disabled");
-		$("#loading{{items.id}}").addClass("loading");
+		
 		req = $.ajax({
 			url:"{{url_for('users.quantity_update',id = items.id)}}",
 			type:"POST",
-			data: {quantity:quantity}
+			data: {quantity:quantity},
+
+			beforeSend: function(){
+				$("#loading{{items.id}}").addClass("loading");
+			},
+			complete: function(){
+				$("#loading{{items.id}}").removeClass("loading");
+			},
+			
 		});
+		
 		//remove loading class here
 		req.done(function(data){
-			$("#loading{{items.id}}").removeClass("loading");
-			$("#qty{{items.id }}").removeClass("disabled");
 			//$("#qty{{items.id}}").fadeOut(1000).fadeIn(1000);
 			new_price = $(".item-total{{items.id}}").text(data.item_total).fadeOut(100).fadeIn(1000);
 			$("#subtotal_value").text(data.subtotal);
@@ -218,8 +225,6 @@
 });
 
 </script>
-{% endfor %}
-
 
 <script>
     const API_publicKey = "FLWPUBK_TEST-fe0814ab10b8b42b0499ae3ad269ddeb-X";
@@ -228,7 +233,7 @@
         var x = getpaidSetup({
             PBFPubKey: API_publicKey,
             customer_email: "user@example.com",
-            amount: 2000,
+            amount: {{items_subtotals + price}},
             customer_phone: "234099940409",
             currency: "NGN",
             txref: "rave-123456",
@@ -257,6 +262,9 @@
         });
     }
 </script>
+
+{% endfor %}
+
 
 {% else %}
 <div class="outerbox">

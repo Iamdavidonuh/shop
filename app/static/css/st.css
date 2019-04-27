@@ -1,3 +1,27 @@
+.carousel-caption h5{
+    color:#01CFCF;
+    font-size: 2em;
+  font-family: 'Lato', sans-serif;
+}
+
+.carousel-caption p,.carousel-caption a{
+  color:#fff;
+  font-size: 1.1em;
+font-family: 'Cabin', sans-serif;
+}
+.xf {
+  width: 39%;
+  background: rgba(0, 0, 0, 0.59);
+  height: auto;
+  min-height: 500px;
+}
+.banner{
+    min-height: 500px;
+    background: url(../img/15.jpg) no-repeat;
+    background-size: auto auto;
+    width: 100%;
+    background-size: cover;
+}
 
 .brand_name .navbar-brand {
 	font-size:1.59rem;

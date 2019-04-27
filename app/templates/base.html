@@ -26,7 +26,7 @@
                         </li>     
                     </ul>
                     
-                    <ul class="navbar-nav ml-auto mr-auto mt-2 mt-lg-0">
+                    <ul class="navbar-nav ml-auto mr-5 mt-2 mt-lg-0">
                             {% if current_user.is_authenticated %}
                             {% if current_user.is_admin %}  
                             <li class="nav-item ml-3">
@@ -97,7 +97,9 @@
                 {% endif %}
             {% endwith %}
     <div class=" container">
-        <script src="{{ url_for('static', filename='js/countrypicker.js') }}"></script>
+            <script src="{{ url_for('static', filename='js/jquery-3.3.1.js') }}"></script>
+            <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+            <script src="{{ url_for('static', filename='js/countrypicker.js') }}"></script>
 
             {% block body %}
 
@@ -150,8 +152,6 @@
         </footer>
     </div>
 
-    <script src="{{ url_for('static', filename='js/jquery-3.3.1.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 
     </body>
 </html>
