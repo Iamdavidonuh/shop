@@ -1,0 +1,334 @@
+{% extends "base.html" %}
+<head>
+	{%block head%}
+	<link href="{{ url_for('static', filename='css/cart.css')}}" rel="stylesheet">
+	{%endblock%}
+
+</head>
+{% block body %}
+<body>
+		
+<div class="wrapper">
+	<header class="heading cf">
+		<h5>My Cart</h5>
+	</header>
+	{% if current_user.is_authenticated %}
+	<div class="outerbox">
+		<div class="innerbox">
+			<div class="cart-content">
+				<ul class="item-wrapper">
+						{% for items in cartlist %}
+					<li id="cart_items" class="cart-items">
+						<div class="infoWrap">
+							<div class="item-description">
+								<img src="{{ items.product.product_image }}" class="item-img">
+								<h6 class="item-name">
+									{{ items.product.product_name }}	
+									
+										<br>
+									<div class="small">
+										<span>Size:</span> 
+										<span>{{ items.product.product_size }}</span>
+									</div>
+										
+								</h6>
+								<br>
+								<div class="xtra">
+									<form action="{{url_for('users.quantity_update', id=items.id)}}" class="form-inline"
+									style="padding:0;margin:0;">
+										<p>
+											<input id="minus-btn" type="button" class="minus-btn{{items.id}}" value="-">
+												<input type="text" name="quantity" class="qty form-control-sm"
+												id="qty{{items.id}}" value="{{items.quantity}}" readonly>
+											<input id="plus-btn" type="button" class="plus-btn{{items.id}} 	" value="+">	
+											  x <span class="iso">₦</span> <span class="item-price{{items.id}}"> {{ items.product.product_price }}</span>
+											  <p> <span id="loading{{items.id}}" class="loading_bkg"></span> </p>
+										</p>
+										
+									</form>
+									<p class="stockStatus">
+										In Stock
+									</p>
+									
+								</div>
+
+							</div>
+							<div class="prod-total item-description">
+								<p> <span class="iso">₦</span> <span class="item-total{{items.id}} item-total">{{items.subtotal}}</span></p>
+							</div>
+
+
+							<div class="remove-item item-description">
+								<a href="{{ url_for('users.remove_item', id=items.id) }}" class="remove">x</a>	
+							</div>
+						</div>
+					</li>
+					
+                    {% endfor %}
+				</ul>
+
+			</div>
+		
+				
+		</div>
+	</div>
+<footer class="cart-footer">
+	<div class="subtotal cf">
+		
+    <ul>
+	  <li class="totalRow"><span class="label">Subtotal</span>
+		<span class="iso">₦</span>
+		<span id="subtotal_value" class="value">{{items_subtotals}}</span>
+	</li>
+	<li class="totalRow"><span class="label">Shipping</span>
+		<span class="iso">₦</span>
+		<span id="shipping_price" class="value">{{ price }}</span>
+	</li>
+
+	<li class="totalRow final"><span class="label">Total</span>
+		<span class="iso">₦</span>
+		<span id="total-final" class="value">{{items_subtotals + price}}</span>
+	</li>
+    </ul>
+  </div>
+
+  
+		<div class="checkoutcontainer">
+			<a href="#" id="checkout" data-toggle="modal" data-target="#exampleModalCenter">
+				<span class="checkout-text">Checkout</span>
+			</a>
+		</div>
+			<!-- Modal -->
+			<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalCenterTitle">Select Payment Method</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+						<div class="row">
+								<div class="col-md-4">
+										<script type="text/javascript" src="https://ravesandboxapi.flutterwave.com/flwv3-pug/getpaidx/api/flwpbf-inline.js"></script>
+										<form method="POST">
+											<script src="https://api.ravepay.co/flwv3-pug/getpaidx/api/flwpbf-inline.js"></script>
+											<button type="button" onClick="payWithRave()" class="btn btn-outline-success">Ravepay</button>
+										</form>
+								</div>
+								<div class="col-md-4">other payment method</div>
+							  </div>
+						
+				</div>
+				
+				</div>
+			</div>
+			</div>
+	
+	<span class="cart-copyright">
+		powered by <a href="#" class="authored">buster matthews</a>
+	</span>
+</footer>
+</div>
+{% for items in cartlist %}
+<script>
+	$(document).ready(function(){
+
+		$('.minus-btn{{items.id}}').on('click', function(e) {
+    		e.preventDefault();
+    		var quantity =parseInt($("#qty{{items.id}}").val());
+    		if (quantity > 1) {
+    			quantity = quantity - 1;
+    		} else {
+    			quantity = 1;
+			}
+			$("#qty{{items.id }}").attr("disabled");
+			$("#loading{{items.id}}").addClass("loading");
+			req = $.ajax({
+			url:"{{url_for('users.quantity_update',id = items.id)}}",
+			type:"POST",
+			data: {quantity:quantity}
+			});
+			req.done(function(data){
+			$("#loading{{items.id}}").removeClass("loading");
+			$("#qty{{items.id }}").removeClass("disabled");
+			//$("#qty{{items.id}}").fadeOut(1000).fadeIn(1000);
+			new_price = $(".item-total{{items.id}}").text(data.item_total).fadeOut(100).fadeIn(1000);
+			$("#subtotal_value").text(data.subtotal);
+			$("#total-final").text(parseFloat($("#subtotal_value").text()) + parseFloat({{price}}));
+		});
+
+		$("#qty{{items.id}}").val(quantity)
+
+		});
+
+		$('.plus-btn{{items.id}}').on('click', function(e){
+			e.preventDefault();
+			var quantity = parseInt($('#qty{{items.id}}').val())
+			if (quantity<20){
+				quantity = quantity +1;
+			}else{
+				quantity = 20;
+
+			}
+			$('#qty{{items.id}}').attr("disabled");
+			$("#loading{{items.id}}").addClass("loading");
+			req = $.ajax({
+			url:"{{url_for('users.quantity_update',id = items.id)}}",
+			type:"POST",
+			data: {quantity:quantity}
+			});
+			req.done(function(data){
+				$("#loading{{items.id}}").removeClass("loading");
+				$("#qty{{items.id }}").removeClass("disabled");
+				//$("#qty{{items.id}}").fadeOut(1000).fadeIn(1000);
+				new_price = $(".item-total{{items.id}}").text(data.item_total).fadeOut(100).fadeIn(1000);
+				$("#subtotal_value").text(data.subtotal);
+				$("#total-final").text(parseFloat($("#subtotal_value").text()) + parseFloat({{price}}));
+			});
+
+			$("#qty{{items.id}}").val(quantity)
+
+
+			});
+
+
+
+
+		$(document).on('blur','#qty{{items.id }}', function(){
+		var quantity =parseInt($("#qty{{items.id}}").val());
+		//$("#subtotal_value").text(subtotal);
+		$("#qty{{items.id }}").addClass("disabled");
+		
+		req = $.ajax({
+			url:"{{url_for('users.quantity_update',id = items.id)}}",
+			type:"POST",
+			data: {quantity:quantity},
+
+			beforeSend: function(){
+				$("#loading{{items.id}}").addClass("loading");
+			},
+			complete: function(){
+				$("#loading{{items.id}}").removeClass("loading");
+			},
+			
+		});
+		
+		//remove loading class here
+		req.done(function(data){
+			//$("#qty{{items.id}}").fadeOut(1000).fadeIn(1000);
+			new_price = $(".item-total{{items.id}}").text(data.item_total).fadeOut(100).fadeIn(1000);
+			$("#subtotal_value").text(data.subtotal);
+			$("#total-final").text(parseFloat($("#subtotal_value").text()) + parseFloat({{price}}));
+		});
+
+		});
+});
+
+</script>
+
+<script>
+    const API_publicKey = "FLWPUBK_TEST-fe0814ab10b8b42b0499ae3ad269ddeb-X";
+
+    function payWithRave() {
+        var x = getpaidSetup({
+            PBFPubKey: API_publicKey,
+            customer_email: "{{current_user.email }}",
+            amount: {{items_subtotals + price}},
+            customer_phone: "{{current_user.phonenumber }}",
+            currency: "NGN",
+            txref: "rave-123456",
+            onclose: function() {},
+            callback: function(response) {
+                var txref = response.tx.txRef; // collect txRef returned and pass to a 					server page to complete status check.
+                console.log("This is the response returned after a charge", response);
+				
+                if (
+                    response.tx.chargeResponseCode == "00" ||
+                    response.tx.chargeResponseCode == "0"
+                ) {
+					
+                    // redirect to a success page
+					window.location = "{{url_for('users.success')}}"; //Add your success page here
+                } else {
+                    // redirect to a failure page.
+					window.location = "{{url_for('users.failed')}}";
+                }
+
+                x.close(); // use this to close the modal immediately after payment.
+            }
+        });
+    }
+</script>
+
+{% endfor %}
+
+
+{% else %}
+<div class="outerbox">
+	<div class="innerbox">
+		<div class="cart-content">
+			<ul class="item-wrapper">
+				<li id="cart_items" class="cart-items">
+					<div class="infoWrap">
+						<div class="item-description">
+							
+
+						</div>
+						<div class="prod-total item-description">
+						</div>
+
+
+						<div class="remove-item item-description">	
+						</div>
+					</div>
+				</li>
+				
+			</ul>
+
+		</div>
+	
+			
+	</div>
+
+	
+
+</div>
+<footer class="cart-footer">
+<div class="subtotal cf">
+<ul>
+  <li class="totalRow"><span class="label">Subtotal</span>
+	<span class="iso">₦</span>
+	<span id="subtotal_value" class="value">0</span>
+</li>
+<li class="totalRow"><span class="label">Shipping</span>
+	<span class="iso">₦</span>
+	<span id="shipping_price" class="value">0</span>
+</li>
+
+<li class="totalRow final"><span class="label">Total</span>
+	<span class="iso">₦</span>
+	<span id="total-final" class="value">0</span>
+</li>
+</ul>
+</div>
+	<div class="checkoutcontainer">
+		<a href="#" id="checkout">
+			<span class="checkout-text">Checkout</span>
+		</a>
+	</div>
+
+<span class="cart-copyright">
+	powered by <a href="#" class="authored">buster matthews</a>
+</span>
+</footer>
+</div>
+
+{% endif %}
+
+</body>
+
+
+
+{% endblock %}

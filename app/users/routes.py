@@ -53,7 +53,10 @@ def subtotals():
 	for price in get_products:
 		items_subtotal+=int(price.subtotal)
 	return items_subtotal
-
+@users.route('/test')
+def testcart():
+	return render_template('testcart.html')
+	
 @users.route('/cart/',methods = ["GET","POST"])
 def cart():	
 	if current_user.is_anonymous:
