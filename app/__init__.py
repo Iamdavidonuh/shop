@@ -3,15 +3,9 @@ from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
-
+from flask_bootstrap import Bootstrap
 from flask_uploads import configure_uploads,UploadSet,IMAGES
 from flask_mail import Mail
-
-
-stripe_keys = {
-    'secret_key': 'sk_test_oeTw14HnAuwKNWSSpRA5jRNh00jrCoutpu',
-    'publishable_key':'pk_test_PMYmr7zLHh7PM61spR2m1hBY001qeaCAFs'
-		}
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -34,7 +28,7 @@ migrate = Migrate(app, db)
 login_manager = LoginManager(app)
 login_manager.login_view = 'auth.login'
 
-
+bootstrap = Bootstrap(app)
 mail = Mail(app)
 
 from app import models

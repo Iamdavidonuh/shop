@@ -31,6 +31,9 @@
                         </div>
                     {% else %}
                         {{ form.password(class="form-control form-control") }}
+                        <small id="passwordHelpInline" class="text-muted">
+                                Must be 8-25 characters long.
+                        </small>
                     {% endif %}
                 </div>
             </fieldset>

@@ -7,6 +7,49 @@ p,h1, h3, input, ul, h6 ,h5{
  	list-style-type: none;
 }
 
+/* for table cart*/
+.table>tbody>tr>td, .table>tfoot>tr>td{
+    vertical-align: middle;
+}
+@media screen and (max-width: 1020px) { /* Large Desktop */ }
+
+@media screen and (max-width: 780px) { /* tablet */ }
+
+@media screen and (max-width: 480px) { /* mobile */ }
+
+@media screen and (max-width: 600px) {
+    table#cart tbody td .form-control{
+		width:20%;
+		display: inline !important;
+	}
+	.actions .btn{
+		width:36%;
+		margin:1.5em 0;
+	}
+	
+	.actions .btn-info{
+		float:left;
+	}
+	.actions .btn-danger{
+		float:right;
+	}
+	
+	table#cart thead { display: none; }
+	table#cart tbody td { display: block; padding: .6rem; min-width:320px;}
+	table#cart tbody tr td:first-child { background: #333; color: #fff; }
+	table#cart tbody td:before {
+		content: attr(data-th); font-weight: bold;
+		display: inline-block; width: 8rem;
+	}
+	
+	
+	
+	table#cart tfoot td{display:block; }
+	table#cart tfoot td .btn{display:block;}
+	
+}
+/*end of table cart*/
+
 .wrapper{
 	position: relative;
 	height: 450px;
@@ -108,12 +151,18 @@ p,h1, h3, input, ul, h6 ,h5{
     display: inline-block;
 }
 
-div.small
+span.size
 {
     color:green;
     line-height: 2;
+    font-size: .90em;
 }
 
+.nomargin
+{
+    font-size: 1.03em;
+    text-transform: capitalize;
+}
  
 /* class xtra holds both input and status tags */
 .xtra
@@ -133,7 +182,7 @@ input.qty {
     margin: 1em .5em 0 0;
     
 }
-p.stockStatus {
+.stockStatus {
     color: #82CA9C;
     font-weight: bold;
     
@@ -141,7 +190,7 @@ p.stockStatus {
     
 }
 /* for out of stock items add the out class*/
-p.stockStatus.out {
+.stockStatus.out {
     color: #F69679;
 }
 
@@ -328,9 +377,4 @@ a.remove:hover {
     background: #fff url('../cart-loader.gif')no-repeat;
 }
 
-#minus-btn,#plus-btn 
-{
-    background-color: black;
-
-}
 

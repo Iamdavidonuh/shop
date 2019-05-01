@@ -34,7 +34,7 @@ def landing():
 	products = Products.query.all()
 	return render_template('head.html', products = products, sorter = sorter)
 
-@home.route('/home')
+@home.route('/home/')
 def homepage():		
 	categories = Categories.query.all()
 	products = Products.query.all()

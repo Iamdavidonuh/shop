@@ -28,7 +28,7 @@ class ProductsForm(FlaskForm):
 	image = FileField('product picture', validators=[FileRequired(),
 	FileAllowed(photos, "images only")])
 	stock = IntegerField('Stock', [validators.DataRequired()])
-	description = TextAreaField('describe the product', [validators.DataRequired()])
+	description = TextAreaField('Describe the product', [validators.DataRequired()])
 	submit = SubmitField('Submit')
 
 

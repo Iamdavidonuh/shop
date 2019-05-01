@@ -2,7 +2,6 @@
 {% block body%}
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 <link href="{{ url_for('static', filename='css/cart.css')}}" rel="stylesheet">
-<link href="{{ url_for('static', filename='css/testcart.css')}}" rel="stylesheet">
 <div class="container">
 		{% if current_user.is_authenticated %}
 	<table id="cart" class="table table-hover table-condensed">
@@ -20,12 +19,23 @@
 							<td data-th="Product">
 								<div class="row">
 									<div class="col-sm-2 hidden-xs"><img src="{{ items.product.product_image }}" class="item-img img-responsive"/></div>
-									<div class="col-sm-8">
-										<h4 class="nomargin">{{ items.product.product_name }}</h4>
-										<div class="offset">
-												<span>Size:</span> 
-												<span>{{ items.product.product_size }}</span>
+									<div class="col-7">
+										<h6 class="nomargin">{{ items.product.product_name }}</h6>
+										<div class="row">
+												<div class="col">
+														<span class="size">Size:</span> 
+														<span class="size">{{ items.product.product_size }}</span>
+												</div>
+												<div class="col">
+														<p class="stockStatus">
+																In Stock
+														</p>
+
+												</div>
+					
+
 										</div>
+										
 									</div>
 
 								</div>
@@ -36,19 +46,19 @@
 									<form action="{{url_for('users.quantity_update', id=items.id)}}" class="form-inline"
 									style="padding:0;margin:0;">
 										<p>
-											<input id="minus-btn" type="button" class="minus-btn{{items.id}}" value="-">
+											<input id="minus-btn" type="button" class="minus-btn{{items.id}} btn btn-sm btn-outline-primary" value="-">
 
 												<input type="text" name="quantity" class="qty form-control-sm"
 												id="qty{{items.id}}" value="{{items.quantity}}" readonly>
-											<input id="plus-btn" type="button" class="plus-btn{{items.id}} 	" value="+">	
+
+											<input id="plus-btn" type="button" class="plus-btn{{items.id}} 	btn btn-sm btn-outline-primary" value="+">
+
 											  x <span class="iso">₦</span> <span class="item-price{{items.id}}"> {{ items.product.product_price }}</span>
 											  <p> <span id="loading{{items.id}}" class="loading_bkg"></span> </p>
 										</p>
-										
+
 									</form>
-									<p class="stockStatus">
-											In Stock
-									</p>
+									
 							</td>
 
 
@@ -60,7 +70,7 @@
 
 							<td class="actions" data-th="">
 									<a href="{{ url_for('users.remove_item', id=items.id) }}"
-									class="remove btn btn-danger btn-sm">x</a>								
+									class=" btn btn-outline-danger btn-sm">x</a>								
 							</td>
 							{% endfor %}
 							
@@ -86,7 +96,7 @@
 							<td class="text-right"><strong><span id ="total-final">{{items_subtotals + price}}</span></strong></td>
 						</tr>
 						<tr>
-							<td><a href="#" class="btn btn-warning"><i class="fa fa-angle-left"></i> Continue Shopping</a></td>
+							<td><a href="{{ url_for('home.homepage') }}" class="btn btn-warning"><i class="fa fa-angle-left"></i> Continue Shopping</a></td>
 							<td colspan="2" class="hidden-xs"></td>
 							<td><a href="#" class="btn btn-success btn-block" data-toggle="modal"
 								data-target="#exampleModalCenter">Checkout <i class="fa fa-angle-right"></i></a></td>
@@ -133,22 +143,35 @@
     		} else {
     			quantity = 1;
 			}
-			$("#qty{{items.id }}").attr("disabled");
-			$("#loading{{items.id}}").addClass("loading");
+			
+			//$("#loading{{items.id}}").addClass("loading");
 			req = $.ajax({
 			url:"{{url_for('users.quantity_update',id = items.id)}}",
 			type:"POST",
-			data: {quantity:quantity}
+			data: {quantity:quantity},
+
+			beforeSend: function(){
+				$("#loading{{items.id}}").addClass("loading");
+				$("#qty{{items.id }}").prop('disabled', true);
+
+				$(".minus-btn{{items.id}}").prop('disabled', true);
+				$(".plus-btn{{items.id}}").prop('disabled', true);
+			},
+			success: function(data){
+                setTimeout(function() {
+                    $("#loading{{items.id}}").removeClass("loading");
+					$("#qty{{items.id }}").prop('disabled', false);
+					$(".minus-btn{{items.id }}").prop('disabled', false);
+					$(".plus-btn{{items.id}}").prop('disabled', false);
+					new_price = $(".item-total{{items.id}}").text(data.item_total).fadeOut(100).fadeIn(1000);
+					$("#subtotal_value").text(data.subtotal);
+					$("#total-final").text(parseFloat($("#subtotal_value").text()) + parseFloat({{price}}));
+                }, 2500);
+            }
 			});
-			req.done(function(data){
-			$("#loading{{items.id}}").removeClass("loading");
-			$("#qty{{items.id }}").removeClass("disabled");
-			//$("#qty{{items.id}}").fadeOut(1000).fadeIn(1000);
-			new_price = $(".item-total{{items.id}}").text(data.item_total).fadeOut(100).fadeIn(1000);
-			$("#subtotal_value").text(data.subtotal);
-			$("#total-final").text(parseFloat($("#subtotal_value").text()) + parseFloat({{price}}));
-		});
-		$("#qty{{items.id}}").val(quantity)
+			
+
+			$("#qty{{items.id}}").val(quantity)
 
 		});
 
@@ -161,25 +184,31 @@
 				quantity = 20;
 
 			}
-			$('#qty{{items.id}}').attr("disabled");
-			$("#loading{{items.id}}").addClass("loading");
-			req = $.ajax({
+			$.ajax({
 			url:"{{url_for('users.quantity_update',id = items.id)}}",
 			type:"POST",
-			data: {quantity:quantity}
-			});
-			req.done(function(data){
-				$("#loading{{items.id}}").removeClass("loading");
-				$("#qty{{items.id }}").removeClass("disabled");
-				//$("#qty{{items.id}}").fadeOut(1000).fadeIn(1000);
-				new_price = $(".item-total{{items.id}}").text(data.item_total).fadeOut(100).fadeIn(1000);
-				$("#subtotal_value").text(data.subtotal);
-				$("#total-final").text(parseFloat($("#subtotal_value").text()) + parseFloat({{price}}));
+			data: {quantity:quantity},
+
+			beforeSend: function(){
+				$("#loading{{items.id}}").addClass("loading");
+				$("#qty{{items.id }}").prop('disabled', true);
+				$(".minus-btn{{items.id }}").prop('disabled', true);
+				$(".plus-btn{{items.id}}").prop('disabled', true);
+			},
+			success: function(data){
+                setTimeout(function() {
+                    $("#loading{{items.id}}").removeClass("loading");
+					$("#qty{{items.id }}").prop('disabled', false);
+					$(".minus-btn{{items.id }}").prop('disabled', false);
+					$(".plus-btn{{items.id }}").prop('disabled', false);
+					new_price = $(".item-total{{items.id}}").text(data.item_total).fadeOut(100).fadeIn(1000);
+					$("#subtotal_value").text(data.subtotal);
+					$("#total-final").text(parseFloat($("#subtotal_value").text()) + parseFloat({{price}}));
+                }, 2500);
+            }
 			});
 
 			$("#qty{{items.id}}").val(quantity)
-
-
 			});
 
 
@@ -190,26 +219,30 @@
 		//$("#subtotal_value").text(subtotal);
 		$("#qty{{items.id }}").addClass("disabled");
 		
-		req = $.ajax({
+		$.ajax({
 			url:"{{url_for('users.quantity_update',id = items.id)}}",
 			type:"POST",
 			data: {quantity:quantity},
 
 			beforeSend: function(){
 				$("#loading{{items.id}}").addClass("loading");
+				$("#qty{{items.id }}").prop('disabled', true);
+				
 			},
+			/*
 			complete: function(){
 				$("#loading{{items.id}}").removeClass("loading");
-			},
+			},*/
 			
-		});
-		
-		//remove loading class here
-		req.done(function(data){
-			//$("#qty{{items.id}}").fadeOut(1000).fadeIn(1000);
-			new_price = $(".item-total{{items.id}}").text(data.item_total).fadeOut(100).fadeIn(1000);
-			$("#subtotal_value").text(data.subtotal);
-			$("#total-final").text(parseFloat($("#subtotal_value").text()) + parseFloat({{price}}));
+			success: function(data){
+                setTimeout(function() {
+                    $("#loading{{items.id}}").removeClass("loading");
+					$("#qty{{items.id }}").prop('disabled', false);
+					new_price = $(".item-total{{items.id}}").text(data.item_total).fadeOut(100).fadeIn(1000);
+					$("#subtotal_value").text(data.subtotal);
+					$("#total-final").text(parseFloat($("#subtotal_value").text()) + parseFloat({{price}}));
+                }, 2500);
+            }
 		});
 
 		});

@@ -10,8 +10,8 @@
 	<div class="row d-block">
 		{% for category in categories %}
 	<a href="{{ url_for('home.shop_by_category', id=category.id) }}">
-		<div class="col l4 s12 m6" style="width: 33.33333%" >
-			<div class="card-panel hoverable" style="height:270px; background-color:#FFFFFF;">
+		<div class="col l4 s12 m6" >
+			<div class="card-panel hoverable" style="max-height:270px; background-color:#FFFFFF;">
 					<div class="card-image" style="margin-left:auto;margin-right: auto;">
 							<img class="responsive-img" src="{{url_for('static', filename = 'test.png')}}"  >
 							<div class="caption">
