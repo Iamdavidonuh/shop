@@ -4,7 +4,8 @@
 <link href="{{ url_for('static', filename='css/cart.css')}}" rel="stylesheet">
 <div class="container">
 		{% if current_user.is_authenticated %}
-	<table id="cart" class="table table-hover table-condensed">
+	<div class="table-responsive">
+		<table id="cart" class="table table-hover table-condensed">
     				<thead>
 						<tr>
 							<th style="width:50%">Product</th>
@@ -19,26 +20,26 @@
 							<td data-th="Product">
 								<div class="row">
 									<div class="col-sm-2 hidden-xs"><img src="{{ items.product.product_image }}" class="item-img img-responsive"/></div>
-									<div class="col-7">
-										<h6 class="nomargin">{{ items.product.product_name }}</h6>
-										<div class="row">
-												<div class="col">
-														<span class="size">Size:</span> 
-														<span class="size">{{ items.product.product_size }}</span>
-												</div>
-												<div class="col">
-														<p class="stockStatus">
-																In Stock
-														</p>
-
-												</div>
-					
-
-										</div>
+									<div class="col-7  col-sm-5 col-md-5">
+										<h6 class="nomargin">
+											<p>{{ items.product.product_name }}</p></h6>
 										
 									</div>
+									<div class="col">
+											<span class="size">Size:</span> 
+											<span class="size">{{ items.product.product_size }}</span>
+									</div>
+									<div class="col">
+											<p class="stockStatus">
+													In Stock
+											</p>
 
+									</div>
 								</div>
+										
+			
+
+
 							</td>
 
 
@@ -51,12 +52,12 @@
 												<input type="text" name="quantity" class="qty form-control-sm"
 												id="qty{{items.id}}" value="{{items.quantity}}" readonly>
 
+
 											<input id="plus-btn" type="button" class="plus-btn{{items.id}} 	btn btn-sm btn-outline-primary" value="+">
 
-											  x <span class="iso">₦</span> <span class="item-price{{items.id}}"> {{ items.product.product_price }}</span>
-											  <p> <span id="loading{{items.id}}" class="loading_bkg"></span> </p>
+											 <span class="times">x</span> <span class="iso">₦</span> <span class="item-price{{items.id}}"> {{ items.product.product_price }}</span>
 										</p>
-
+										
 									</form>
 									
 							</td>
@@ -70,8 +71,17 @@
 
 							<td class="actions" data-th="">
 									<a href="{{ url_for('users.remove_item', id=items.id) }}"
-									class=" btn btn-outline-danger btn-sm">x</a>								
+									class=" btn btn-outline-danger btn-sm">x</a>
+									
+									<div id="loading{{items.id}}" class="spinner-border spinner-border-sm text-success temp_hidden" role="status">
+											<span class="sr-only">Loading...</span>
+										  </div>
+										  <div id="loading_{{items.id}}" class="spinner-grow spinner-grow-sm text-success temp_hidden" role="status">
+											<span class="sr-only">Loading...</span>
+									</div>								
 							</td>
+
+
 							{% endfor %}
 							
 						</tr>
@@ -130,6 +140,7 @@
 						</tr>
 					</tfoot>
 				</table>
+			</div>
 </div>
 {% for items in cartlist %}
 <script>
@@ -151,18 +162,22 @@
 			data: {quantity:quantity},
 
 			beforeSend: function(){
-				$("#loading{{items.id}}").addClass("loading");
+				$("#loading{{items.id}}").removeClass("temp_hidden");
+				$("#loading_{{items.id}}").removeClass("temp_hidden");
+				
 				$("#qty{{items.id }}").prop('disabled', true);
-
 				$(".minus-btn{{items.id}}").prop('disabled', true);
 				$(".plus-btn{{items.id}}").prop('disabled', true);
 			},
 			success: function(data){
                 setTimeout(function() {
-                    $("#loading{{items.id}}").removeClass("loading");
+					$("#loading{{items.id}}").addClass("temp_hidden");
+					$("#loading_{{items.id}}").addClass("temp_hidden");
+					
 					$("#qty{{items.id }}").prop('disabled', false);
 					$(".minus-btn{{items.id }}").prop('disabled', false);
 					$(".plus-btn{{items.id}}").prop('disabled', false);
+					
 					new_price = $(".item-total{{items.id}}").text(data.item_total).fadeOut(100).fadeIn(1000);
 					$("#subtotal_value").text(data.subtotal);
 					$("#total-final").text(parseFloat($("#subtotal_value").text()) + parseFloat({{price}}));
@@ -190,14 +205,18 @@
 			data: {quantity:quantity},
 
 			beforeSend: function(){
-				$("#loading{{items.id}}").addClass("loading");
+				$("#loading{{items.id}}").removeClass("temp_hidden");
+				$("#loading_{{items.id}}").removeClass("temp_hidden");
+
 				$("#qty{{items.id }}").prop('disabled', true);
 				$(".minus-btn{{items.id }}").prop('disabled', true);
 				$(".plus-btn{{items.id}}").prop('disabled', true);
 			},
 			success: function(data){
                 setTimeout(function() {
-                    $("#loading{{items.id}}").removeClass("loading");
+					$("#loading{{items.id}}").addClass("temp_hidden");
+					$("#loading_{{items.id}}").addClass("temp_hidden");
+
 					$("#qty{{items.id }}").prop('disabled', false);
 					$(".minus-btn{{items.id }}").prop('disabled', false);
 					$(".plus-btn{{items.id }}").prop('disabled', false);
@@ -225,19 +244,23 @@
 			data: {quantity:quantity},
 
 			beforeSend: function(){
-				$("#loading{{items.id}}").addClass("loading");
+				$("#loading{{items.id}}").removeClass("temp_hidden");
+				$("#loading_{{items.id}}").removeClass("temp_hidden");
+
 				$("#qty{{items.id }}").prop('disabled', true);
+				$(".minus-btn{{items.id }}").prop('disabled', true);
+				$(".plus-btn{{items.id}}").prop('disabled', true);
 				
 			},
-			/*
-			complete: function(){
-				$("#loading{{items.id}}").removeClass("loading");
-			},*/
-			
 			success: function(data){
                 setTimeout(function() {
-                    $("#loading{{items.id}}").removeClass("loading");
+					$("#loading{{items.id}}").addClass("temp_hidden");
+					$("#loading_{{items.id}}").addClass("temp_hidden");
+					
 					$("#qty{{items.id }}").prop('disabled', false);
+					$(".minus-btn{{items.id }}").prop('disabled', false);
+					$(".plus-btn{{items.id }}").prop('disabled', false);
+
 					new_price = $(".item-total{{items.id}}").text(data.item_total).fadeOut(100).fadeIn(1000);
 					$("#subtotal_value").text(data.subtotal);
 					$("#total-final").text(parseFloat($("#subtotal_value").text()) + parseFloat({{price}}));
