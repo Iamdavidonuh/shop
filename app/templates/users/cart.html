@@ -4,143 +4,141 @@
 <link href="{{ url_for('static', filename='css/cart.css')}}" rel="stylesheet">
 <div class="container">
 		{% if current_user.is_authenticated %}
-	<div class="table-responsive">
-		<table id="cart" class="table table-hover table-condensed">
-    				<thead>
-						<tr>
-							<th style="width:50%">Product</th>
-							<th style="width:25%">Quantity</th>
-							<th style="width:15%">subtotal</th>
-							<th style="width:10%"></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-								{% for items in cartlist %}
-							<td data-th="Product">
-								<div class="row">
-									<div class="col-sm-2 hidden-xs"><img src="{{ items.product.product_image }}" class="item-img img-responsive"/></div>
-									<div class="col-7  col-sm-5 col-md-5">
-										<h6 class="nomargin">
-											<p>{{ items.product.product_name }}</p></h6>
-										
-									</div>
-									<div class="col">
-											<span class="size">Size:</span> 
-											<span class="size">{{ items.product.product_size }}</span>
-									</div>
-									<div class="col">
-											<p class="stockStatus">
-													In Stock
-											</p>
 
+
+	<div class="container">
+		<div class="row hide">
+				<div class="col-1">
+						
+				</div>
+			
+				<div class="col-6 col-md-3">
+					<strong>Product</strong>
+				</div>
+				<div class="col-3 col-md-2">
+						<strong>Size</strong>
+				</div>
+				<div class="col-auto left">
+						<strong>Subtotal</strong>
+				</div>
+
+				<div class="col-auto col-md-3">
+						<strong>Quantity</strong>
+				</div>
+
+				<div class="col-3 col-md-2">
+						<strong></strong>
+				</div>
+
+		</div>
+		
+		{% for items in cartlist %}
+
+		<div class="row">
+
+			<div class="col-1">
+				<img src="{{ items.product.product_image }}" class="item-img img-responsive"/>
+
+			</div>	
+			<div class="col-6 col-md-3">
+				
+					<h6 class="nomargin">
+							<p>{{ items.product.product_name }}</p>
+						</h6>
+			</div>
+			<div class="col-3 col-md-2">
+					<span class="size">Size:</span> 
+					<span class="size">{{ items.product.product_size }}</span>
+			</div>
+
+			<div class="col-auto left">
+					<p> 
+							<span class="iso">₦</span>
+							<span class="item-total{{items.id}} item-total">{{items.subtotal}}
+						</span></p>
+			</div>
+			<div class="col-auto col-md-4">
+					<form action="{{url_for('users.quantity_update', id=items.id)}}" class="form-inline"
+					style="padding:0;margin:0;">
+						<p>
+							<input id="minus-btn" type="button" class="minus-btn{{items.id}} btn btn-sm btn-outline-primary" value="-">
+
+								<input type="text" name="quantity" class="qty form-control-sm"
+								id="qty{{items.id}}" value="{{items.quantity}}" readonly>
+
+
+							<input id="plus-btn" type="button" class="plus-btn{{items.id}} 	btn btn-sm btn-outline-primary" value="+">
+
+							 <span class="times">x</span> <span class="iso">₦</span> <span class="item-price{{items.id}}"> {{ items.product.product_price }}</span>
+						</p>
+						
+					</form>
+			</div>
+			<div class="col-3 col-md-2 actions">
+
+					<a href="{{ url_for('users.remove_item', id=items.id) }}"
+					class=" btn btn-outline-danger btn-sm">x</a>
+					
+					<div id="loading{{items.id}}" class="spinner-border spinner-border-sm text-success temp_hidden" role="status">
+							<span class="sr-only">Loading...</span>
+						  </div>
+						  <div id="loading_{{items.id}}" class="spinner-grow spinner-grow-sm text-success temp_hidden" role="status">
+							<span class="sr-only">Loading...</span>
+					</div>
+			</div>
+			
+		</div>
+		<div class="line"></div>
+		{% endfor %}
+		<div class="table-crt">
+				<strong>Subtotal</strong>
+				<span id="subtotal_value">{{items_subtotals}}</span>
+				<strong>Shipping</strong>
+				{{ price }}
+				<strong>Total</strong>
+				<strong><span id ="total-final">{{items_subtotals + price}}</span></strong>
+
+		</div>
+
+				<tr>
+					<td><a href="{{ url_for('home.homepage') }}" class="btn btn-outline-dark continue-shopping"><i class="fa fa-angle-left"></i> Continue Shopping</a></td>
+					<td colspan="2" class="hidden-xs"></td>
+					<td><a href="#" class="btn btn-success checkout-btn float-right" data-toggle="modal"
+						data-target="#exampleModalCenter">Checkout <i class="fa fa-angle-right"></i></a></td>
+										<!-- Modal -->
+						<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+								<div class="modal-dialog modal-dialog-centered" role="document">
+									<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="exampleModalCenterTitle">Select Payment Method</h5>
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div class="modal-body">
+											<div class="row">
+													<div class="col-md-4">
+															<script type="text/javascript" src="https://ravesandboxapi.flutterwave.com/flwv3-pug/getpaidx/api/flwpbf-inline.js"></script>
+															<form method="POST">
+																<script src="https://api.ravepay.co/flwv3-pug/getpaidx/api/flwpbf-inline.js"></script>
+																<button type="button" onClick="payWithRave()" class="btn btn-outline-success">Ravepay</button>
+															</form>
+													</div>
+													<div class="col-md-4">other payment method</div>
+												</div>
+											
+									</div>
+									
 									</div>
 								</div>
-										
-			
+								</div>
+				</tr>
+			</tfoot>
+		</table>
+</div>
 
 
-							</td>
-
-
-							<td data-th="Quantity">
-									<form action="{{url_for('users.quantity_update', id=items.id)}}" class="form-inline"
-									style="padding:0;margin:0;">
-										<p>
-											<input id="minus-btn" type="button" class="minus-btn{{items.id}} btn btn-sm btn-outline-primary" value="-">
-
-												<input type="text" name="quantity" class="qty form-control-sm"
-												id="qty{{items.id}}" value="{{items.quantity}}" readonly>
-
-
-											<input id="plus-btn" type="button" class="plus-btn{{items.id}} 	btn btn-sm btn-outline-primary" value="+">
-
-											 <span class="times">x</span> <span class="iso">₦</span> <span class="item-price{{items.id}}"> {{ items.product.product_price }}</span>
-										</p>
-										
-									</form>
-									
-							</td>
-
-
-							<td data-th="Price"><p> 
-								<span class="iso">₦</span>
-								<span class="item-total{{items.id}} item-total">{{items.subtotal}}
-							</span></p>
-							</td>
-
-							<td class="actions" data-th="">
-									<a href="{{ url_for('users.remove_item', id=items.id) }}"
-									class=" btn btn-outline-danger btn-sm">x</a>
-									
-									<div id="loading{{items.id}}" class="spinner-border spinner-border-sm text-success temp_hidden" role="status">
-											<span class="sr-only">Loading...</span>
-										  </div>
-										  <div id="loading_{{items.id}}" class="spinner-grow spinner-grow-sm text-success temp_hidden" role="status">
-											<span class="sr-only">Loading...</span>
-									</div>								
-							</td>
-
-
-							{% endfor %}
-							
-						</tr>
-					</tbody>
-
-					<tfoot>
-						<tr class="visible-xs">
-								<th colspan="1"><strong></strong></th>
-							<th ><strong>Subtotal</strong></th>
-							<td class="text-right"><span id="subtotal_value">{{items_subtotals}}</span></td>
-						</tr>
-						<tr class="visible-xs">
-								<th colspan="1"><strong></strong></th>
-							<th ><strong>Shipping</strong></th>
-							<td class="text-right">{{ price }}</td>
-						</tr>
-						
-
-						<tr class="visible-xs">
-								<th colspan="1"><strong></strong></th>
-							<th ><strong>Total</strong></th>
-							<td class="text-right"><strong><span id ="total-final">{{items_subtotals + price}}</span></strong></td>
-						</tr>
-						<tr>
-							<td><a href="{{ url_for('home.homepage') }}" class="btn btn-warning"><i class="fa fa-angle-left"></i> Continue Shopping</a></td>
-							<td colspan="2" class="hidden-xs"></td>
-							<td><a href="#" class="btn btn-success btn-block" data-toggle="modal"
-								data-target="#exampleModalCenter">Checkout <i class="fa fa-angle-right"></i></a></td>
-												<!-- Modal -->
-								<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-										<div class="modal-dialog modal-dialog-centered" role="document">
-											<div class="modal-content">
-											<div class="modal-header">
-												<h5 class="modal-title" id="exampleModalCenterTitle">Select Payment Method</h5>
-												<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-												<span aria-hidden="true">&times;</span>
-												</button>
-											</div>
-											<div class="modal-body">
-													<div class="row">
-															<div class="col-md-4">
-																	<script type="text/javascript" src="https://ravesandboxapi.flutterwave.com/flwv3-pug/getpaidx/api/flwpbf-inline.js"></script>
-																	<form method="POST">
-																		<script src="https://api.ravepay.co/flwv3-pug/getpaidx/api/flwpbf-inline.js"></script>
-																		<button type="button" onClick="payWithRave()" class="btn btn-outline-success">Ravepay</button>
-																	</form>
-															</div>
-															<div class="col-md-4">other payment method</div>
-														</div>
-													
-											</div>
-											
-											</div>
-										</div>
-										</div>
-						</tr>
-					</tfoot>
-				</table>
-			</div>
+	</div>
 </div>
 {% for items in cartlist %}
 <script>

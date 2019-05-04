@@ -13,8 +13,105 @@ p,h1, h3, input, ul, h6 ,h5{
 {
     display: none;
 }
+.line
+{
+    width: 100%;
+     
+    margin-bottom:2px; 
+    border-bottom:1px solid #777777;
 
-@media screen and (max-width: 1020px) { /* Large Desktop */ }
+}
+.actions
+    {
+        margin-left:auto;
+        margin-right:30px;
+        margin-top: -50px;
+        
+    }
+    .table-crt
+    {
+        display:table;
+        margin-left: auto;
+        margin-right: 20px;
+        width: 60%;
+        padding: 8px;
+    }
+    .table-crt > strong
+    {
+        padding: 8px;
+        font-size: 18.59px
+    }
+
+@media screen and (max-width: 1280px) { 
+    /* Larger Desktop */ 
+    .row{
+        margin-left: -24px; 
+    }
+    .col-1{
+        margin-left: -14px; 
+    }
+    .col-6{
+        margin-left: 14px; 
+    }
+    .nomargin > p{
+    word-wrap: break-word; 
+    }
+    .actions
+    {
+        margin-left:auto;
+        margin-right:30px;
+        margin-top: -50px;
+        
+    }
+    .table-crt
+    {
+        display:table;
+        margin-left: auto;
+        margin-right: 20px;
+        width: 60%;
+        padding: 8px;
+    }
+    .table-crt > strong
+    {
+        padding: 8px;
+        font-size: 18.59px
+    }
+}
+
+@media screen and (max-width: 1020px) { 
+    /* Large Desktop */ 
+    .row{
+        margin-left: -24px; 
+    }
+    .col-1{
+        margin-left: -14px; 
+    }
+    .col-6{
+        margin-left: 14px; 
+    }
+    .nomargin > p{
+    word-wrap: break-word; 
+    }
+    .actions
+    {
+        margin-left:auto;
+        margin-right: -40px;
+        margin-top: -50px;
+        
+    }
+    .table-crt
+    {
+        display:table;
+        margin-left: auto;
+        margin-right: 20px;
+        width: 70%;
+        padding: 8px;
+        margin-bottom:8px; 
+    }
+    
+}
+
+
 
 @media screen and (max-width: 780px) { 
 	/* tablet */
@@ -26,15 +123,68 @@ p,h1, h3, input, ul, h6 ,h5{
     {
         margin-left: 1.6em;
     }
-	.form-inline p>span{display: none;}
+    .form-inline p>span{display: none;}
+    .hide{
+        display: none;
+    }
+    .left{
+    position: relative;
+    left: 77%;
+    margin-top:-60px;
+    }
+    .table-crt
+    {
+        display:table;
+        margin-left: auto;
+        margin-right: 20px;
+        width: 70%;
+        padding: 8px;
+        margin-bottom:8px; 
+    }
+    
  }
 
-@media screen and (max-width: 480px) { /* mobile */ }
 
 /*start table cart*/
 .table>tbody>tr>td, .table>tfoot>tr>td{
     vertical-align: middle;
 }
+
+
+@media screen and (max-width: 480px) {
+    /* mobile */
+    .continue-shopping{
+        display: none;
+    } 
+    .table-crt
+{
+    display: grid;
+    justify-content: flex-end !important;
+        margin-left: auto;
+        margin-right:0;
+        width: auto;
+        padding: 3px;
+        margin-bottom:2px;
+}
+.actions {
+
+    margin-left: auto;
+    margin-right: -65px;
+    margin-top: -50px;
+
+}
+.checkout-btn{
+    width: 100%;
+    
+}
+
+.row
+{
+    margin-left: -14px;
+}
+
+
+ }
 /*
 @media screen and (max-width: 600px) {
     table#cart tbody td .form-control{
@@ -184,6 +334,9 @@ span.size
     font-size: 1.03em;
     text-transform: capitalize;
 }
+.nomargin > p{
+    word-wrap: break-word; 
+    }
  
 /* class xtra holds both input and status tags */
 .xtra
