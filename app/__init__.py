@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template,abort
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -42,3 +42,16 @@ app.register_blueprint(admin, url_prefix = '/admin')
 app.register_blueprint(auth)
 app.register_blueprint(home)
 app.register_blueprint(users)
+
+@app.errorhandler(403)
+def forbidden(error):
+    return render_template('errors/403.html', title = 'Forbidden'),403
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('errors/404.html', title = 'Page Not Found'),404
+
+@app.errorhandler(500)
+def internal_server_error(error):
+    return render_template('errors/500.html', title = 'Forbidden'),500
+
