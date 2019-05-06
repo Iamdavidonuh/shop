@@ -28,6 +28,7 @@
             {% endif %}
             <br/>
             <form method="POST">
+                    {{error}}
                     {{ form.hidden_tag() }}
                     <div class="form-group">
                             {{ form.categories.label(class="form-control-label") }}

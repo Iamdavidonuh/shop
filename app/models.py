@@ -4,15 +4,12 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as serializer
 
-association_table = db.Table('association', db.Model.metadata,
-	db.Column('product',db.Integer, db.ForeignKey('product.id')),
+
+association_table = db.Table('association',
+	db.Column('user',db.Integer, db.ForeignKey('user.id')),
 	db.Column('order',db.Integer, db.ForeignKey('order.id'))
 	)
-
-'''
-	models holds database tables
-'''
-
+	
 
 class User(UserMixin, db.Model):
 
@@ -26,10 +23,11 @@ class User(UserMixin, db.Model):
 	phonenumber = db.Column(db.String(18), index=True, unique=True)
 	is_admin = db.Column(db.Boolean, default = False)
 	#user and order relationship is a one to many 
-	order = db.relationship('Order', backref='my_orders')
+	order = db.relationship('Order', secondary=association_table, backref='my_orders', lazy='dynamic')
 	#user and kart is one to one relationship
 	kart = db.relationship('Kart', uselist=False, backref='user_kart')
 	#one to many relationships with Shipping info
+	#change role
 	shipping_info = db.relationship('ShippingInfo', backref='role',lazy='dynamic')
 	
 	def set_password(self, password):
@@ -102,14 +100,7 @@ class Products(db.Model):
 	product_size = db.Column(db.String(5), index = True)
 	categories_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
 	
-	'''
-		foreign key for product.id
-		test this weda its one order several products or several orders, serveral products
-		using many to many for now	
-		#many many rel with order
-	'''
-	
-	order = db.relationship("Order", secondary = association_table)
+	order = db.relationship("Order", backref='ordered_products')
 
 	def __repr__(self):
 		return '<Products {}>'.format(self.product_name)
@@ -129,27 +120,11 @@ class Kart(db.Model):
 
 
 
-
 class Order(db.Model):
 	__tablename__ = 'order'
 	id = db.Column(db.Integer, primary_key=True)
-	quantity = db.Column(db.Integer, index = True)
+	product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
 	timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-	'''
-
-		foreign key for product.id
-		test this weda its one order several products or several orders, serveral products
-		using many to many for now	
-
-		products_order = db.relationship("Order", backref="products")
-		
-
-	'''
-	#foreign key for userid
-	#
-	#user and order relationship is a one to many(foreign key
-	# linking the user class and the order class)
-	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 	def __repr__(self):
 		return '<Order {}>'.format(self.timestamp)

@@ -128,6 +128,7 @@ def add_product():
 	'''
 	add a product to the database
 	'''
+	error = 'hii'
 	add_product = True
 
 	form = ProductsForm()
@@ -148,6 +149,7 @@ def add_product():
 			db.session.commit()
 			flash("You have successfully added a product")
 		except:
+			error
 			# in case product name already exists
 			flash("Error: product name already exits")
 		
@@ -155,7 +157,7 @@ def add_product():
 		return redirect(url_for('admin.list_products'))
 	#load product template
 	return render_template('admin/products/product.html', add_product = add_product,
-	form = form, title = "Add Product")
+	form = form, title = "Add Product",error=error)
 
 
 
