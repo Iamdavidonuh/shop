@@ -13,7 +13,7 @@ from app.users.forms import (ShippingForm,RequestResetForm,ResetPasswordForm,
 	CartForm)
 from app import db, mail
 from flask_mail import Message
-#from rave_python import Rave,RaveExceptions, Misc
+from random import randint
 users = Blueprint('users', __name__)
 
 
@@ -124,7 +124,8 @@ def success():
 	if request.method == "GET":
 		user = current_user.email
 		send_success_mail(user)
-		order = Order(user_id=u)
+		ref = randint(1,10000)
+		order = Order(user_id=u,order_ref = ref)
 		db.session.add(order)
 		db.session.commit()
 		items = Kart.query.filter_by(user_id=u).all()

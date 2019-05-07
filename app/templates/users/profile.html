@@ -39,9 +39,9 @@
 
         {% for orders in order%}
         <ol>
-                        
+                        order as of {{orders.timestamp}}        
                 {%for i in orders.my_orders %}
-                order as of {{orders.timestamp}}
+                
                 <li> {{ i.product_name }}---------{{i.product_price}}</li>
                 {% endfor %}
         </ol>
