@@ -25,6 +25,10 @@ font-family: 'Cabin', sans-serif;
     width: 100%;
     background-size: cover;
 }
+.carousel-img-height{
+  height: 350px;
+  width: auto;
+}
 
 .brand_name .navbar-brand {
 	font-size:1.59rem;
@@ -82,6 +86,43 @@ font-weight: 300;
   width: 50%;
   padding: 10px;
 }
+
+
+
+@media screen and (max-width: 1020px) {
+  /* mobile */
+  .xf{
+    width: 50%;
+  }
+
+}
+@media screen and (max-width: 900px) {
+  /* mobile */
+  .xf{
+    width: 45%;
+  }
+
+}
+@media screen and (max-width: 768px) {
+  /* mobile */
+  .xf{
+    width: 55%;
+  }
+
+}
+
+@media screen and (max-width: 480px) {
+  /* mobile */
+  .xf{
+    width: 85%;
+    margin: 0 auto;
+  }
+
+}
+
+
+
+/* from materialize.css*/
 img.responsive-img, video.responsive-video {
     max-width: 100%;
     height: auto;

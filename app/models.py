@@ -6,7 +6,7 @@ from itsdangerous import TimedJSONWebSignatureSerializer as serializer
 
 
 association_table = db.Table('association',
-	db.Column('user',db.Integer, db.ForeignKey('user.id')),
+	db.Column('product',db.Integer, db.ForeignKey('product.id')),
 	db.Column('order',db.Integer, db.ForeignKey('order.id'))
 	)
 	
@@ -23,12 +23,13 @@ class User(UserMixin, db.Model):
 	phonenumber = db.Column(db.String(18), index=True, unique=True)
 	is_admin = db.Column(db.Boolean, default = False)
 	#user and order relationship is a one to many 
-	order = db.relationship('Order', secondary=association_table, backref='my_orders', lazy='dynamic')
+	order = db.relationship("Order", backref='ordered_products')
+	
 	#user and kart is one to one relationship
 	kart = db.relationship('Kart', uselist=False, backref='user_kart')
 	#one to many relationships with Shipping info
 	#change role
-	shipping_info = db.relationship('ShippingInfo', backref='role',lazy='dynamic')
+	shipping_info = db.relationship('ShippingInfo', backref='shipping',lazy='dynamic')
 	
 	def set_password(self, password):
 		self.password_hash = generate_password_hash(password)
@@ -100,7 +101,8 @@ class Products(db.Model):
 	product_size = db.Column(db.String(5), index = True)
 	categories_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
 	
-	order = db.relationship("Order", backref='ordered_products')
+	order = db.relationship('Order', secondary=association_table, backref='my_orders', lazy='dynamic')
+	
 
 	def __repr__(self):
 		return '<Products {}>'.format(self.product_name)
@@ -123,7 +125,7 @@ class Kart(db.Model):
 class Order(db.Model):
 	__tablename__ = 'order'
 	id = db.Column(db.Integer, primary_key=True)
-	product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
+	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 	timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
 	def __repr__(self):

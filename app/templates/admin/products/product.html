@@ -27,8 +27,7 @@
                 <h1>Edit Product</h1>
             {% endif %}
             <br/>
-            <form method="POST">
-                    {{error}}
+            <form method="POST" enctype="multipart/form-data">
                     {{ form.hidden_tag() }}
                     <div class="form-group">
                             {{ form.categories.label(class="form-control-label") }}
@@ -52,10 +51,7 @@
 
                     <div class="form-group">
                             {{ form.image.label(class="form-control-label") }}
-
-                            {{ form.image
-                                (class="form-control-file") }}
-
+                            {{ form.image(class="form-control-file") }}
                     </div>
                     
 

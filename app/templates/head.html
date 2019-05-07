@@ -94,7 +94,7 @@
                                             </ol>
                                             <div class="carousel-inner">
                                                     <div class="carousel-item active" style="min-height:480px;">
-                                                            <img src="{{url_for('static',filename='test.png')}}" class="d-block w-100" alt="...">
+                                                            <img src="{{url_for('static',filename='test.png')}}" class="d-block carousel-img-height" alt="...">
                                                             <div class="carousel-caption d-none d-md-block">
                                                             <h5>Featured Products</h5>
                                                             <p>
@@ -108,7 +108,7 @@
                                             {% if i.id in sorter %}
                                                 <div class="carousel-item" style="min-height:480px;">
                                                     <a href="{{url_for('home.product_details',id = i.id)}}">
-                                                        <img src="{{i.product_image}}" class="d-block w-100" alt="...">
+                                                        <img src="{{i.product_image}}" class="d-block  carousel-img-height" alt="...">
                                                         <div class="carousel-caption d-none d-md-block">
                                                         <h5>Featured Products</h5>
                                                         <p>{{i.product_name}}</p>

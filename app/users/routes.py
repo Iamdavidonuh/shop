@@ -3,7 +3,7 @@ from flask import (render_template, request, redirect, url_for, session,
 	flash, Blueprint, jsonify
 	)
 
-from app.models import User, ShippingInfo, Kart,Products
+from app.models import User, ShippingInfo, Kart,Products,Order,association_table
 
 import gc
 
@@ -93,7 +93,8 @@ def quantity_update(id):
 	item_total = cart_item.product.product_price * int(quantity)
 	cart_item.subtotal = item_total
 	items_subtotal = subtotals()
-	db.session.commit()		
+	db.session.commit()
+	gc.collect()		
 	return jsonify({"result":"success", "item_total":item_total, "subtotal":items_subtotal})
 
 
@@ -103,6 +104,7 @@ def remove_item(id):
 	cart_item = Kart.query.get_or_404(id)
 	db.session.delete(cart_item)
 	db.session.commit()
+	gc.collect()
 	return redirect(url_for('users.cart'))
 
 def send_success_mail(user):
@@ -117,12 +119,23 @@ If you did not make this request simply ignore this request and no changes will 
 @login_required
 @users.route('/success',methods = ["GET"])
 def success():
+	u = current_user.id
 	flash('Transaction successful', 'success')
 	if request.method == "GET":
 		user = current_user.email
 		send_success_mail(user)
+		order = Order(user_id=u)
+		db.session.add(order)
+		db.session.commit()
+		items = Kart.query.filter_by(user_id=u).all()
+		for i in items:
+			ids = i.product
+			order.my_orders.append(ids)
+			db.session.delete(i)
+		db.session.commit()
+		gc.collect()
 	return render_template('users/charge.html')
-
+@login_required
 @users.route('/failure')
 def failed():
 	flash('transaction Failed', 'danger')
@@ -137,6 +150,7 @@ def profile():
 	else:
 		user = current_user.id
 		count = Kart.query.filter_by(user_id =user).count()
+		order = Order.query.filter_by(user_id = user)
 
 	form = ShippingForm()
 	shipping = ShippingInfo.query.all()
@@ -146,10 +160,11 @@ def profile():
 		state=form.state.data,country=request.form['country'])
 		db.session.add(info)
 		db.session.commit()
+		gc.collect()
 		flash('shipping information was submitted successfully','success')
 		return redirect(url_for('users.profile'))
 	return render_template('users/profile.html', title = "Account page",form=form,
-	shipping = shipping, count=count)
+	shipping = shipping, count=count, order = order)
 
 
 def send_reset_email(user):
@@ -191,6 +206,7 @@ def reset_token(token):
 	if form.validate_on_submit():
 		user.password_hash = user.set_password(form.password.data)
 		db.session.commit()
+		gc.collect()
 		flash('Your password has been successfully updated', 'success')
 		return redirect(url_for('auth.login'))
 	return render_template('users/change-password.html',title = 'Reset password',
