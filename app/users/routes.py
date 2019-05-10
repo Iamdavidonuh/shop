@@ -152,6 +152,7 @@ def profile():
 		user = current_user.id
 		count = Kart.query.filter_by(user_id =user).count()
 		order = Order.query.filter_by(user_id = user)
+		items = Kart.query.filter_by(user_id=user).all()
 
 	form = ShippingForm()
 	shipping = ShippingInfo.query.all()
@@ -165,7 +166,7 @@ def profile():
 		flash('shipping information was submitted successfully','success')
 		return redirect(url_for('users.profile'))
 	return render_template('users/profile.html', title = "Account page",form=form,
-	shipping = shipping, count=count, order = order)
+	shipping = shipping, count=count, order = order,items=items)
 
 
 def send_reset_email(user):

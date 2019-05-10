@@ -125,8 +125,9 @@ class Kart(db.Model):
 class Order(db.Model):
 	__tablename__ = 'order'
 	id = db.Column(db.Integer, primary_key=True)
-	order_ref = db.column(db.Integer)
+	order_ref = db.Column(db.Integer,index = True)
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+	user = db.relationship('User', uselist=False)
 	timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
 	def __repr__(self):

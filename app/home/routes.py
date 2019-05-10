@@ -17,7 +17,6 @@ def admin_dashboard():
 	#preventing non admins from accessing the page
 	if not current_user.is_admin:
 		abort(403)
-	flash("admin dashboard")
 	return render_template('admin/admin_dashboard.html' , title = "Dashboard")
 
 @home.route('/')

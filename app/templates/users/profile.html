@@ -25,7 +25,18 @@
 
 <div class="tab-content" id="nav-tabContent mb-5">
 <div class="tab-pane fade show active " id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                <ul class="list-group mt-4">
+                <form class="form-inline float-left">
+                                
+                                <div class="form-check mb-2 mr-sm-2">
+                                  <input class="form-check-input" type="checkbox" id="inlineFormCheck">
+                                  <label class="form-check-label" for="inlineFormCheck">
+                                    Remember me
+                                  </label>
+                                </div>
+                              
+                                <button type="submit" class="btn btn-primary mb-2">Submit</button>
+                </form>
+                <ul class="list-group mt-4 center">
                         <li class="list-group-item">{{current_user.firstname }}</li>
                         <li class="list-group-item">{{current_user.lastname }}</li>
                         <li class="list-group-item">{{ current_user.email }}</li>
@@ -36,16 +47,33 @@
 </div>
 
 <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-
-        {% for orders in order%}
-        <ol>
-                        order as of {{orders.timestamp}}        
-                {%for i in orders.my_orders %}
+        <div class="center">
+                {% for orders in order%}
                 
-                <li> {{ i.product_name }}---------{{i.product_price}}</li>
-                {% endfor %}
-        </ol>
-        {%endfor%}
+                <table class="table table-borderless">
+                        <caption style="text-align:center;">Orders as of  {{orders.timestamp.strftime('%d-%m-%Y,  %H:%M:%S')}}</caption>
+                        <thead>
+                                                        
+                          <tr>
+                            <th scope="col">Product Name</th>
+                            <th scope="col">Product Price</th>
+                            <!--<th scope="col">Product Quantity</th>-->
+                          </tr>
+                        </thead>
+                        <tbody>
+                        {%for i in orders.my_orders %}
+                        <tr>
+                            
+                            <td>{{ i.product_name }}</td>
+                            <td>{{i.product_price}}</td>
+                          </tr>
+                          {% endfor %}
+
+                        </tbody>
+                      </table>
+
+                {%endfor%}
+        </div>
 </div>
 
 <!-- shipping-->

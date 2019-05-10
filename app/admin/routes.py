@@ -4,7 +4,7 @@ request
 )
 from flask_login import current_user, login_required
 from app.admin.forms import CategoriesForm, ProductsForm
-from app.models import Categories, Products
+from app.models import Categories, Products,Order
 from app import photos
 from config import Config
 from app import db
@@ -232,4 +232,14 @@ def delete_product(id):
 	#return render_template(title = "Delete Product")
 
 	
+@admin.route('/orders/')
+@login_required
+def list_orders():
+	check_admin()
+	'''
+	list all orders
+	'''
+	orders = Order.query.all()
+
+	return render_template('admin/orders.html', title = 'Orders', orders = orders)
 	

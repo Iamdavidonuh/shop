@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}All Orders {% endblock %}
+
+{% block body %}
+
+{% for orders in orders%}
+
+
+<table class="table table-borderless">
+          <tr>
+              <th>User Details</th>
+            <td>{{ orders.user.firstname}} {{ orders.user.lastname}}</td>
+            <td>{{ orders.user.email}}</td>
+
+            <td>{{orders.timestamp.strftime('%d-%m-%Y, %H:%M:%S')}}</td>
+          </tr>
+          <tr>
+              <th>Items ordered</th>
+                    
+                <ul>
+                    <td>
+                            {% for i in orders.my_orders%}
+                        
+                            <li>{{ i.product_name}}</li>
+                            {% endfor %}
+                    </td>
+                </ul>
+
+          </tr>
+        </tbody>
+      </table> 
+{%endfor%}
+
+{% endblock body %}
