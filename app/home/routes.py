@@ -53,10 +53,15 @@ def shop_by_category(id):
 	else:
 		count = Kart.query.filter_by(user_id =current_user.id).count()
 
+	page = request.args.get('page',1, type=int)
+	
 	category = Categories.query.get_or_404(id)
-	product = Products.query.get(id)
-	return render_template("home/shop_by_category.html", category = category,
-	product = product, title = "Category: "+ category.category_name,count=count)
+	product = Products.query.filter_by(categories_id=category.id)\
+		.order_by(Products.product_name).paginate(page=page, per_page=6)
+	prod_id = Products.query.get(id)
+	return render_template("home/shop_by_category.html", category = category,\
+		product = product, title = "Category: "+ category.category_name,count=count,\
+		prod_id = prod_id)
 
 
 @home.route('/productdetails/<int:id>/', methods = ["GET","POST"])

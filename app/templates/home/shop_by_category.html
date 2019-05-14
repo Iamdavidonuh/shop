@@ -39,7 +39,7 @@
 
 {% if category.product %}
 <div class="row d-block">
-        {% for product_list in category.product %}
+        {% for product_list in product.items %}
 	<a href="{{ url_for('home.product_details', id = product_list.id ) }}">
         <div class="col l4 s12 m6">
 			<div class="card-panel hoverable" style="max-height:360px; background-color:#FFFFFF;">    
@@ -65,8 +65,20 @@
 			</div>
 		</div>
 	</a>
-		{% endfor %}
+        {% endfor %}
 </div>
+{% for page_num in product.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+{% if page_num %}
+    {% if product.page == page_num %}
+        <a class="btn btn-info mb-4" href="{{ url_for('home.shop_by_category', id = prod_id.id , page = page_num)}}">{{page_num}}</a>
+    {% else %}
+    <a class="btn btn-outline-info mb-4" href="{{ url_for('home.shop_by_category', id = prod_id.id , page = page_num)}}">{{page_num}}</a>
+    {%endif%}
+{%else%}
+...
+{%endif%}
+{% endfor %}
+
 {% else %}
 <div class="container-fluid">
     <h2 class="center">
@@ -76,6 +88,7 @@
     </h2>
 </div>
 {% endif %}
+
     {% endif %}
     
 
