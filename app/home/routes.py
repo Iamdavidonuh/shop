@@ -54,35 +54,36 @@ def shop_by_category(category_name):
 		count = Kart.query.filter_by(user_id =current_user.id).count()
 
 	page = request.args.get('page',1, type=int)
-	
-	category = Categories.query.filter_by(category_name = Categories.category_name).first()
-	
-	product = Products.query.filter_by(id=category)\
+
+	category = Categories.query.filter_by(category_name=category_name).first_or_404()
+
+	product = Products.query.filter_by(categories_id=category.id)\
 		.order_by(Products.product_name).paginate(page=page, per_page=6)
 	
-	for_pagi = Categories.query.filter_by(category_name = Categories.category_name).first()
+	for_pagi = Categories.query.filter_by(category_name = Categories.category_name).first_or_404()
 	return render_template("home/shop_by_category.html", category = category,\
 		product = product, title = "Category: "+ category.category_name,count=count,\
 		for_pagi = for_pagi)
 
 
-@home.route('/productdetails/<int:id>/', methods = ["GET","POST"])
-def product_details(id):
+@home.route('/productdetails/<string:product_name>/', methods = ["GET","POST"])
+def product_details(product_name):
 	if current_user.is_anonymous:
 		count = 0
 	else:
 		count = Kart.query.filter_by(user_id =current_user.id).count()
 		user =current_user.id
 	form = Variations()
-	product_detail = Products.query.get_or_404(id)
-	 
+
+	product_detail = Products.query.filter_by(product_name=product_name).first_or_404()
 		
 	# add to cart
 	if form.validate_on_submit():
 		# annonymous users
 		if current_user.is_anonymous:
 			flash('please login before you can add items to your shopping cart','warning')
-			return redirect(url_for("home.product_details",id = product_detail.id))
+			return redirect(url_for("home.product_details",\
+				product_name = product_detail.product_name))
 		# authenticated users
 		product_detail.product_size = form.sizes.data
 		cart = Kart(user_id=user, product_id=product_detail.id, quantity=1,
@@ -91,7 +92,8 @@ def product_details(id):
 		db.session.commit()
 
 		flash("{} has been added to cart".format(product_detail.product_name))	
-		return redirect(url_for('home.product_details',id = product_detail.id ))
+		return redirect(url_for('home.product_details',\
+			product_name = product_detail.product_name ))
 	return render_template("home/productdetails.html",
 		product_detail = product_detail,title = product_detail.product_name,
 		form =form,count=count)

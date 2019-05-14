@@ -40,7 +40,7 @@
 {% if category.product %}
 <div class="row d-block">
         {% for product_list in product.items %}
-	<a href="{{ url_for('home.product_details', id = product_list.id ) }}">
+	<a href="{{ url_for('home.product_details', product_name = product_list.product_name ) }}">
         <div class="col l4 s12 m6">
 			<div class="card-panel hoverable" style="max-height:360px; background-color:#FFFFFF;">    
                 <div class="card-image" style="margin-left:auto;margin-right: auto;">
