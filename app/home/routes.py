@@ -45,8 +45,8 @@ def homepage():
 	return render_template("home/index.html", title = 'Website name',
 	categories = categories, products = products, count=count)
 
-@home.route('/<int:id>/')
-def shop_by_category(id):
+@home.route('/<string:category_name>/')
+def shop_by_category(category_name):
 	if current_user.is_anonymous:
 
 		count = 0
@@ -55,13 +55,15 @@ def shop_by_category(id):
 
 	page = request.args.get('page',1, type=int)
 	
-	category = Categories.query.get_or_404(id)
-	product = Products.query.filter_by(categories_id=category.id)\
+	category = Categories.query.filter_by(category_name = Categories.category_name).first()
+	
+	product = Products.query.filter_by(id=category)\
 		.order_by(Products.product_name).paginate(page=page, per_page=6)
-	prod_id = Products.query.get(id)
+	
+	for_pagi = Categories.query.filter_by(category_name = Categories.category_name).first()
 	return render_template("home/shop_by_category.html", category = category,\
 		product = product, title = "Category: "+ category.category_name,count=count,\
-		prod_id = prod_id)
+		for_pagi = for_pagi)
 
 
 @home.route('/productdetails/<int:id>/', methods = ["GET","POST"])

@@ -70,9 +70,9 @@
 {% for page_num in product.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
 {% if page_num %}
     {% if product.page == page_num %}
-        <a class="btn btn-info mb-4" href="{{ url_for('home.shop_by_category', id = prod_id.id , page = page_num)}}">{{page_num}}</a>
+        <a class="btn btn-info mb-4" href="{{ url_for('home.shop_by_category', category_name = for_pagi.category_name , page = page_num)}}">{{page_num}}</a>
     {% else %}
-    <a class="btn btn-outline-info mb-4" href="{{ url_for('home.shop_by_category', id = prod_id.id , page = page_num)}}">{{page_num}}</a>
+    <a class="btn btn-outline-info mb-4" href="{{ url_for('home.shop_by_category', category_name = for_pagi.category_name , page = page_num)}}">{{page_num}}</a>
     {%endif%}
 {%else%}
 ...
