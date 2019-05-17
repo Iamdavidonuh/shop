@@ -1,13 +1,5 @@
 
 -----------------------------------------
-change cart icon to cart image 
-add random generated number and store in order this is because
-if one user order twice u can't exactly get the specific order u want
-problems this generated:
-
-		if i want to get a particular set of order for a particular time by a user na wahala oooooo
-
-if same user makes another order how do i get all dat particular order 
-***** might not be a problem no more*****
- now convert the timestamp to real time 
+make footer 
+if admin deletes a product it should also delete the picture
 ----------------------------------------------

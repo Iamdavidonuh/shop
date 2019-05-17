@@ -1,5 +1,39 @@
-.text-center{
+.svg-footer{
+  height: 2.5em;
+  width: 2.5em;
+}
+.footer-break
+{
+  background-color:#e0e0d1;
+}
+.footer-title
+{
+  font-weight: bold;
+  font-size: 1.5em;
   text-align: center;
+  
+}
+.footer-links
+{
+  text-align: center;
+  color: inherit;
+  text-decoration:none;
+  text-transform: capitalize;
+  
+}
+.footer-links:hover
+{
+  color: inherit;
+}
+.owner
+{
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1.0em;
+}
+.owner > a
+{
+  text-decoration: underline;
+  color: inherit;
 }
 .carousel-caption h5{
     color:#01CFCF;

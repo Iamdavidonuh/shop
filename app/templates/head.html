@@ -107,7 +107,7 @@
                                             {% for i in products %}    
                                             {% if i.id in sorter %}
                                                 <div class="carousel-item" style="min-height:480px;">
-                                                    <a href="{{url_for('home.product_details',id = i.id)}}">
+                                                    <a href="{{url_for('home.product_details',product_name = i.product_name)}}">
                                                         <img src="{{i.product_image}}" class="d-block  carousel-img-height" alt="...">
                                                         <div class="carousel-caption d-none d-md-block">
                                                         <h5>Featured Products</h5>

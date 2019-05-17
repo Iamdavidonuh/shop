@@ -7,6 +7,7 @@ from app.admin.forms import CategoriesForm, ProductsForm
 from app.models import Categories, Products,Order
 from app import photos
 from config import Config
+import gc
 from app import db
 
 admin = Blueprint('admin', __name__)
@@ -54,7 +55,7 @@ def add_category():
 			db.session.add(category)
 			db.session.commit()
 			flash("You have successfully added a new category")
-
+			gc.collect()
 		except Exception as e:
 			#incase category name already exists
 			flash('Error: category name already exits. ')
@@ -82,6 +83,7 @@ def edit_category(id):
 	if form.validate_on_submit():
 		category.category_name = form.name.data
 		db.session.commit()
+		gc.collect()
 		flash("You have successfully edited the category")
 
 		#redirect to the categories page
@@ -101,6 +103,7 @@ def delete_category(id):
 	category = Categories.query.get_or_404(id)
 	db.session.delete(category)
 	db.session.commit()
+	gc.collect()
 	flash("You have successfully deleted a Category")
 
 	#redirect to Cateogries page
@@ -147,6 +150,7 @@ def add_product():
 			#add a product to the database
 			db.session.add(product)
 			db.session.commit()
+			gc.collect()
 			flash("You have successfully added a product")
 		except:
 			error
@@ -182,11 +186,10 @@ def edit_product(id):
 		picture_fn = name + f_ext
 		
 		#get the name of the previous image
-		previous_name = product.product_image
+		previous_img_name = picture_fn
 
 		photos.save(filename, name = picture_fn)
 		url = photos.url(picture_fn)
-
 
 		product.product_name = form.name.data
 		product.product_price = form.price.data
@@ -194,13 +197,13 @@ def edit_product(id):
 		product.product_description = form.description.data
 		product.product_stock = form.stock.data
 		db.session.commit()
+		gc.collect()
 
 		#remove the changed picture from the folder
-		if previous_name in Config.UPLOADED_PHOTOS_DEST:
-			os.remove(previous_name)
+		img_dir = Config.UPLOADED_PHOTOS_DEST+'/'
+		os.remove(img_dir+previous_img_name)
 		
 		flash('You have successfully edited a product')
-
 		#redirect to the products page
 		redirect(url_for('admin.list_products'))
 
@@ -223,13 +226,22 @@ def delete_product(id):
 	check_admin()
 	
 	product = Products.query.get_or_404(id)
+	
+	#get image extension
+	_, f_ext = os.path.splitext(product.product_image)
+	
+	previous_img_name = product.product_name+f_ext
+	img_dir = Config.UPLOADED_PHOTOS_DEST+'/'
+	#remove the changed picture from the folder
+	os.remove(img_dir+previous_img_name)		
+	
 	db.session.delete(product)
 	db.session.commit()
+	gc.collect()
 	flash("You have successfully deleted a product")
-	#redirect to products page
+	
 	return redirect(url_for('admin.list_products'))
-	#renders same template as edit_product
-	#return render_template(title = "Delete Product")
+	
 
 	
 @admin.route('/orders/')
