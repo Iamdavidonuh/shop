@@ -49,18 +49,21 @@ def add_category():
 	form = CategoriesForm()
 	
 	if form.validate_on_submit():
-		category = Categories(category_name=form.name.data)
+		filename = request.files['image']
+		_, f_ext = os.path.splitext(filename.filename)
+		name = form.name.data
+		picture_fn = name + f_ext
+		photos.save(filename, name = picture_fn)
+		url = photos.url(picture_fn)
+		category = Categories(category_name=form.name.data, category_image = url)
 		try:
-			#add the category to the database
 			db.session.add(category)
 			db.session.commit()
 			flash("You have successfully added a new category")
 			gc.collect()
 		except Exception as e:
-			#incase category name already exists
 			flash('Error: category name already exits. ')
-
-			#return to the categories page
+			
 		return redirect(url_for('admin.list_categories'))
 	return render_template('admin/categories/category.html', action = "Add", form = form,
 		add_category = add_category, title = "Add Categories")
@@ -81,10 +84,24 @@ def edit_category(id):
 
 	form =CategoriesForm(obj=category)
 	if form.validate_on_submit():
+		filename = request.files['image']
+		_, f_ext = os.path.splitext(filename.filename)
+		name = form.name.data
+		picture_fn = name + f_ext
+		#get the name of the previous image
+		previous_img_name = picture_fn
+		photos.save(filename, name = picture_fn)
+		url = photos.url(picture_fn)
+
 		category.category_name = form.name.data
+		category.category_image = url
 		db.session.commit()
 		gc.collect()
 		flash("You have successfully edited the category")
+
+		#remove the changed picture from the folder
+		img_dir = Config.UPLOADED_PHOTOS_DEST+'/'
+		os.remove(img_dir+previous_img_name)
 
 		#redirect to the categories page
 		return redirect(url_for('admin.list_categories'))
@@ -101,12 +118,18 @@ def edit_category(id):
 @admin.route('/categories/delete/<int:id>', methods = ["GET","POST"])
 def delete_category(id):
 	category = Categories.query.get_or_404(id)
+	
+	#get image extension
+	_, f_ext = os.path.splitext(category.category_image)
+	
+	previous_img_name = category.category_name + f_ext
+	img_dir = Config.UPLOADED_PHOTOS_DEST+'/'
+	os.remove(img_dir+previous_img_name)
 	db.session.delete(category)
 	db.session.commit()
 	gc.collect()
 	flash("You have successfully deleted a Category")
 
-	#redirect to Cateogries page
 	return redirect(url_for('admin.list_categories'))
 '''
 	return render_template('admin/categories/category.html',
@@ -131,7 +154,7 @@ def add_product():
 	'''
 	add a product to the database
 	'''
-	error = 'hii'
+
 	add_product = True
 
 	form = ProductsForm()
@@ -153,7 +176,6 @@ def add_product():
 			gc.collect()
 			flash("You have successfully added a product")
 		except:
-			error
 			# in case product name already exists
 			flash("Error: product name already exits")
 		
@@ -161,7 +183,7 @@ def add_product():
 		return redirect(url_for('admin.list_products'))
 	#load product template
 	return render_template('admin/products/product.html', add_product = add_product,
-	form = form, title = "Add Product",error=error)
+	form = form, title = "Add Product")
 
 
 

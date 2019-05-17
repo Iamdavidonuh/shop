@@ -9,12 +9,10 @@ from app import photos
 from app.models import Categories
 
 class CategoriesForm(FlaskForm):
-	'''
-	Form for admin to add or edit
-	a category name
-	'''
+
 	name = StringField('Name', [validators.DataRequired()])
-	
+	image = FileField('Category Image', validators=[FileRequired(),
+	FileAllowed(photos, "images only")])
 	submit = SubmitField('Submit')
 
 class ProductsForm(FlaskForm):

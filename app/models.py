@@ -84,6 +84,7 @@ class ShippingInfo(db.Model):
 class Categories(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	category_name  = db.Column(db.String(20), index = True) 
+	category_image = db.Column(db.String(120),index=True)
 	#one to many relationship btwn categories and products
 	product = db.relationship('Products', backref='products_categories')
 
