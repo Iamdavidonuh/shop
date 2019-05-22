@@ -8,6 +8,7 @@ from flask_login import current_user, login_required
 from app.models import User, Categories, Products,Kart
 from app.admin.forms import Variations
 import random
+import os
 home = Blueprint('home', __name__)
 
 
@@ -33,17 +34,23 @@ def landing():
 	products = Products.query.all()
 	return render_template('head.html', products = products, sorter = sorter)
 
+def spliter(image_name,height,width,image_url):
+	_,ext = os.path.splitext(image_url)
+	url = "https://ik.imagekit.io/david00nv/tr:w-{0},h-{1},fo-auto/_uploads/photos/{2}{3}"\
+		.format(width,height,image_name,ext)
+	return url
+
 @home.route('/home/')
 def homepage():		
 	categories = Categories.query.all()
 	products = Products.query.all()
-
 	if current_user.is_anonymous:
 		count = 0
 	else:
 		count = Kart.query.filter_by(user_id =current_user.id).count()
+	image_res = spliter
 	return render_template("home/index.html", title = 'Website name',
-	categories = categories, products = products, count=count)
+	categories = categories, products = products, count=count,image_res = image_res)
 
 @home.route('/<string:category_name>/')
 def shop_by_category(category_name):
@@ -61,9 +68,10 @@ def shop_by_category(category_name):
 		.order_by(Products.product_name).paginate(page=page, per_page=6)
 	
 	for_pagi = Categories.query.filter_by(category_name = Categories.category_name).first_or_404()
+	image_res = spliter
 	return render_template("home/shop_by_category.html", category = category,\
 		product = product, title = "Category: "+ category.category_name,count=count,\
-		for_pagi = for_pagi)
+		for_pagi = for_pagi, image_res = image_res)
 
 
 @home.route('/productdetails/<string:product_name>/', methods = ["GET","POST"])
@@ -73,6 +81,7 @@ def product_details(product_name):
 	else:
 		count = Kart.query.filter_by(user_id =current_user.id).count()
 		user =current_user.id
+	image_res = spliter
 	form = Variations()
 
 	product_detail = Products.query.filter_by(product_name=product_name).first_or_404()
@@ -93,9 +102,9 @@ def product_details(product_name):
 
 		flash("{} has been added to cart".format(product_detail.product_name))	
 		return redirect(url_for('home.product_details',\
-			product_name = product_detail.product_name ))
+			product_name = product_detail.product_name,image_res = image_res ))
 	return render_template("home/productdetails.html",
 		product_detail = product_detail,title = product_detail.product_name,
-		form =form,count=count)
+		form =form,count=count,image_res = image_res)
 
 

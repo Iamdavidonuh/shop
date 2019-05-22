@@ -54,7 +54,7 @@ font-family: 'Cabin', sans-serif;
 }
 .banner{
     min-height: 500px;
-    background: url(../img/15.jpg) no-repeat;
+    background: url(https://ik.imagekit.io/david00nv/tr:w-937,h-500,fo-face/static/img/15.jpg) no-repeat;
     background-size: auto auto;
     width: 100%;
     background-size: cover;

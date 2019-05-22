@@ -3,3 +3,4 @@
 make footer 
 if admin deletes a product it should also delete the picture
 ----------------------------------------------
+258*140

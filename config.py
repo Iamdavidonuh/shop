@@ -10,10 +10,10 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     # Uploads
     UPLOADS_DEFAULT_DEST = TOP_LEVEL_DIR + '/app/static/img/products'
-    UPLOADS_DEFAULT_URL = 'http://localhost:5000/static/img/products'
+    UPLOADS_DEFAULT_URL = 'https://ik.imagekit.io/david00nv/static/img/products'
  
     UPLOADED_PHOTOS_DEST = TOP_LEVEL_DIR + '/app/static/img/products'
-    UPLOADED_IMAGES_URL = 'http://localhost:5000/static/img/products'
+    UPLOADED_IMAGES_URL = 'https://ik.imagekit.io/david00nv/static/img/products'
 
     MAIL_SERVER='smtp.googlemail.com'
     MAIL_PORT = 587

@@ -14,6 +14,7 @@ from app.users.forms import (ShippingForm,RequestResetForm,ResetPasswordForm,
 from app import db, mail
 from flask_mail import Message
 from random import randint
+from  app.home.routes import spliter
 users = Blueprint('users', __name__)
 
 
@@ -53,10 +54,7 @@ def subtotals():
 	for price in get_products:
 		items_subtotal+=int(price.subtotal)
 	return items_subtotal
-@users.route('/test')
-def testcart():
-	return render_template('testcart.html')
-	
+
 @users.route('/cart/',methods = ["GET","POST"])
 def cart():	
 	if current_user.is_anonymous:
@@ -67,7 +65,8 @@ def cart():
 		user = current_user.id
 		count = Kart.query.filter_by(user_id =user).count() 
 		cartlist = Kart.query.filter_by(user_id=user).all()
-	
+
+	image_res = spliter
 	form = CartForm()
 	# fetch cart data 
 	
@@ -78,10 +77,12 @@ def cart():
 	if current_user.is_anonymous:
 		flash('please login or register to be able to add a shipping address')			
 		return render_template('users/cart.html', count= count, cartlist= cartlist,
-	title = "Cart", form = form, price=price, items_subtotals=items_subtotals)
+	title = "Cart", form = form, price=price, items_subtotals=items_subtotals,\
+		image_res = image_res)
 	
 	return render_template('users/cart.html', count= count, cartlist= cartlist,
-	title = "Cart", form = form, price=price,items_subtotals=items_subtotals)
+	title = "Cart", form = form, price=price,items_subtotals=items_subtotals,\
+		image_res = image_res)
 
 
 
